@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
 
+// On Vercel without SITE_URL, fall back to the project's production domain rather than localhost.
+const vercel = process.env.VERCEL_PROJECT_PRODUCTION_URL
 /** Public origin for canonical URLs, the sitemap and social previews. Set at build time. */
-export const SITE_URL = process.env.SITE_URL ?? 'http://localhost:3000'
+export const SITE_URL = process.env.SITE_URL ?? (vercel ? `https://${vercel}` : 'http://localhost:3000')
 
 const IMAGE = { url: '/opengraph-image', width: 1200, height: 630, alt: 'RandSight · Your money, in hindsight.' }
 
