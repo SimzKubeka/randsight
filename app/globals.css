@@ -109,6 +109,11 @@ a:hover {
   color: var(--rs-blue-strong);
 }
 
+::selection {
+  background: var(--rs-blue-50);
+  color: var(--rs-ink);
+}
+
 :focus-visible {
   outline: 3px solid var(--rs-focus);
   outline-offset: 2px;

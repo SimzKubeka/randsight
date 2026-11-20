@@ -54,7 +54,7 @@
 
   .nav {
     position: sticky;
-    top: var(--rs-space-6);
+    top: calc(4rem + var(--rs-space-6)); /* below the sticky header */
     align-self: start;
   }
 

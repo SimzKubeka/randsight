@@ -6,6 +6,10 @@
 }
 
 .header {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background: var(--rs-surface);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -50,6 +54,26 @@
 
 .nav .signIn:hover {
   background: var(--rs-blue-50);
+}
+
+/* The header gains its rule once the page has scrolled. */
+@supports (animation-timeline: scroll()) {
+  .header {
+    animation: header-rule linear both;
+    animation-timeline: scroll(root);
+    animation-range: 0 64px;
+  }
+}
+
+@keyframes header-rule {
+  from {
+    border-bottom-color: transparent;
+    box-shadow: none;
+  }
+
+  to {
+    box-shadow: 0 6px 16px -10px rgb(17 20 24 / 0.18);
+  }
 }
 
 .footer {
