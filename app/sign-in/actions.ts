@@ -2,7 +2,8 @@
 
 import { cookies, headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { checkThrottle, clearFailures, createSession, recordFailure, safeNext, SESSION_COOKIE } from '@/lib/auth.ts'
+import { checkThrottle, clearFailures, recordFailure, safeNext, SESSION_COOKIE } from '@/lib/auth.ts'
+import { createSession } from '@/lib/sessions.ts'
 import { getDb } from '@/lib/db.ts'
 import { hashPassword, verifyPassword } from '@/lib/password.ts'
 
