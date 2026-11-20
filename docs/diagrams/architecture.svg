@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 580" width="1000" height="580" font-family="'Source Sans 3', 'Segoe UI', Arial, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">RandSight architecture</title>
+  <desc id="d">The browser requests the dashboard (1). The page checks the session in lib/auth.ts (2), runs customer-scoped queries in lib/data.ts against SQLite (3), calculates the explanation in lib/insights.ts (4) and returns private, uncached HTML (5). A simulated feed of fixture payments feeds Live Track. A consented bank API is proposed, not built.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#1f5fcc"/>
+    </marker>
+    <marker id="arrow-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#4a5260"/>
+    </marker>
+  </defs>
+
+  <rect width="1000" height="580" fill="#ffffff"/>
+
+  <!-- title -->
+  <path d="M33 22h7l-9.6 28h-7zM47 22h7l-9.6 28h-7z" fill="#cb432b"/>
+  <text x="62" y="45" font-size="22" font-weight="700" fill="#111418">RandSight: one request, end to end</text>
+
+  <!-- browser -->
+  <rect x="30" y="110" width="170" height="110" rx="8" fill="#ffffff" stroke="#111418" stroke-width="1.5"/>
+  <text x="115" y="158" font-size="17" font-weight="700" fill="#111418" text-anchor="middle">Browser</text>
+  <text x="115" y="181" font-size="14" fill="#4a5260" text-anchor="middle">phone or desktop</text>
+
+  <!-- next.js app -->
+  <rect x="250" y="75" width="500" height="330" rx="10" fill="#f5f7fa" stroke="#c4ccd6" stroke-width="1.5"/>
+  <text x="270" y="98" font-size="14" font-weight="700" fill="#4a5260">Next.js app · one container</text>
+
+  <rect x="275" y="110" width="450" height="52" rx="6" fill="#ffffff" stroke="#111418" stroke-width="1.2"/>
+  <text x="500" y="132" font-size="16" font-weight="700" fill="#111418" text-anchor="middle">app/dashboard/page.tsx</text>
+  <text x="500" y="152" font-size="13" fill="#4a5260" text-anchor="middle">Server Component: checks the session, reads data, renders HTML</text>
+
+  <rect x="275" y="215" width="136" height="64" rx="6" fill="#ffffff" stroke="#111418" stroke-width="1.2"/>
+  <text x="343" y="243" font-size="15" font-weight="700" fill="#111418" text-anchor="middle">lib/insights.ts</text>
+  <text x="343" y="263" font-size="13" fill="#4a5260" text-anchor="middle">reporting rules</text>
+
+  <rect x="432" y="215" width="136" height="64" rx="6" fill="#ffffff" stroke="#111418" stroke-width="1.2"/>
+  <text x="500" y="243" font-size="15" font-weight="700" fill="#111418" text-anchor="middle">lib/auth.ts</text>
+  <text x="500" y="263" font-size="13" fill="#4a5260" text-anchor="middle">session check</text>
+
+  <rect x="589" y="215" width="136" height="64" rx="6" fill="#ffffff" stroke="#111418" stroke-width="1.2"/>
+  <text x="657" y="243" font-size="15" font-weight="700" fill="#111418" text-anchor="middle">lib/data.ts</text>
+  <text x="657" y="263" font-size="13" fill="#4a5260" text-anchor="middle">customer-scoped SQL</text>
+
+  <rect x="275" y="340" width="200" height="48" rx="6" fill="#ffffff" stroke="#111418" stroke-width="1.2"/>
+  <text x="375" y="361" font-size="15" font-weight="700" fill="#111418" text-anchor="middle">Live Track action</text>
+  <text x="375" y="379" font-size="13" fill="#4a5260" text-anchor="middle">applies a payment once</text>
+
+  <!-- sqlite -->
+  <rect x="800" y="150" width="170" height="250" rx="8" fill="#ffffff" stroke="#111418" stroke-width="1.5"/>
+  <text x="885" y="180" font-size="17" font-weight="700" fill="#111418" text-anchor="middle">SQLite (WAL)</text>
+  <line x1="815" y1="194" x2="955" y2="194" stroke="#d9dee5"/>
+  <g font-size="14" fill="#4a5260" text-anchor="middle">
+    <text x="885" y="222">customers</text>
+    <text x="885" y="250">sessions</text>
+    <text x="885" y="278">transactions</text>
+    <text x="885" y="306">targets</text>
+    <text x="885" y="334">sim_events</text>
+  </g>
+
+  <!-- request path -->
+  <g stroke="#1f5fcc" stroke-width="2" fill="none" marker-end="url(#arrow)">
+    <path d="M200 128H273"/>
+    <path d="M275 150H202"/>
+    <path d="M500 162V213"/>
+    <path d="M657 162V213"/>
+    <path d="M343 162V213"/>
+    <path d="M725 247H798"/>
+    <path d="M500 279V325H798"/>
+    <path d="M475 364H798"/>
+  </g>
+
+  <!-- step numbers -->
+  <g font-size="13" font-weight="700" fill="#ffffff" text-anchor="middle">
+    <circle cx="237" cy="112" r="11" fill="#1f5fcc"/><text x="237" y="117">1</text>
+    <circle cx="516" cy="188" r="11" fill="#1f5fcc"/><text x="516" y="193">2</text>
+    <circle cx="673" cy="188" r="11" fill="#1f5fcc"/><text x="673" y="193">3</text>
+    <circle cx="359" cy="188" r="11" fill="#1f5fcc"/><text x="359" y="193">4</text>
+    <circle cx="237" cy="168" r="11" fill="#1f5fcc"/><text x="237" y="173">5</text>
+  </g>
+  <text x="30" y="250" font-size="13" fill="#4a5260">5 · HTML, private, no-store</text>
+  <text x="762" y="240" font-size="12" fill="#4a5260" text-anchor="middle">WHERE</text>
+  <text x="762" y="270" font-size="12" fill="#4a5260" text-anchor="middle">customer_id</text>
+
+  <!-- feeds -->
+  <rect x="275" y="455" width="200" height="52" rx="6" fill="#ffffff" stroke="#111418" stroke-width="1.2"/>
+  <text x="375" y="477" font-size="15" font-weight="700" fill="#111418" text-anchor="middle">Simulated feed</text>
+  <text x="375" y="496" font-size="13" fill="#4a5260" text-anchor="middle">fixture payments</text>
+  <path d="M375 455V390" stroke="#4a5260" stroke-width="2" fill="none" marker-end="url(#arrow-ink)"/>
+
+  <rect x="525" y="455" width="225" height="52" rx="6" fill="#ffffff" stroke="#4a5260" stroke-width="1.5" stroke-dasharray="6 5"/>
+  <text x="637" y="477" font-size="15" font-weight="700" fill="#4a5260" text-anchor="middle">Consented bank API</text>
+  <text x="637" y="496" font-size="13" fill="#4a5260" text-anchor="middle">proposed · not built</text>
+  <path d="M750 481H885V402" stroke="#4a5260" stroke-width="2" stroke-dasharray="6 5" fill="none" marker-end="url(#arrow-ink)"/>
+  <text x="818" y="472" font-size="12" fill="#4a5260" text-anchor="middle">webhook → transactions</text>
+
+  <!-- legend -->
+  <g font-size="13" fill="#4a5260">
+    <line x1="30" y1="548" x2="66" y2="548" stroke="#4a5260" stroke-width="2"/>
+    <text x="74" y="552">built in this app</text>
+    <line x1="210" y1="548" x2="246" y2="548" stroke="#4a5260" stroke-width="2" stroke-dasharray="6 5"/>
+    <text x="254" y="552">proposed, not built</text>
+  </g>
+</svg>

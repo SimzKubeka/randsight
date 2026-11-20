@@ -1,0 +1,100 @@
+.frame {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--rs-surface);
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background: var(--rs-surface);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--rs-space-4);
+  min-height: 4rem;
+  padding-inline: var(--rs-gutter);
+  border-bottom: 1px solid var(--rs-rule);
+}
+
+.home {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--rs-tap);
+  text-decoration: none;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-2);
+}
+
+.nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--rs-tap);
+  padding-inline: var(--rs-space-3);
+  border-radius: var(--rs-radius-sm);
+  color: var(--rs-ink);
+  font-weight: var(--rs-weight-semibold);
+  text-decoration: none;
+}
+
+.nav a:hover {
+  background: var(--rs-canvas);
+}
+
+.nav .signIn {
+  border: 1px solid var(--rs-blue);
+  color: var(--rs-blue);
+}
+
+.nav .signIn:hover {
+  background: var(--rs-blue-50);
+}
+
+/* The header gains its rule once the page has scrolled. */
+@supports (animation-timeline: scroll()) {
+  .header {
+    animation: header-rule linear both;
+    animation-timeline: scroll(root);
+    animation-range: 0 64px;
+  }
+}
+
+@keyframes header-rule {
+  from {
+    border-bottom-color: transparent;
+    box-shadow: none;
+  }
+
+  to {
+    box-shadow: 0 6px 16px -10px rgb(17 20 24 / 0.18);
+  }
+}
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--rs-space-2) var(--rs-space-6);
+  margin-top: auto;
+  padding: var(--rs-space-5) var(--rs-gutter);
+  border-top: 1px solid var(--rs-rule);
+  color: var(--rs-ink-2);
+  font-size: var(--rs-text-sm);
+}
+
+.footer p {
+  margin: 0;
+}
+
+@media (min-width: 64rem) {
+  .header,
+  .footer {
+    padding-inline: var(--rs-space-10);
+  }
+}
