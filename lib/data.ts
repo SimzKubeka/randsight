@@ -3,6 +3,10 @@ import type { TotalRow } from './insights.ts'
 
 // Every query is scoped by customer_id, which must come from the signed-in session.
 
+export function getCustomerName(db: DatabaseSync, customerId: number): string {
+  return (db.prepare('SELECT name FROM customers WHERE id = ?').get(customerId) as { name: string }).name
+}
+
 /** Per month, category and kind sums for months from..to inclusive ('YYYY-MM'). */
 export function getTotals(db: DatabaseSync, customerId: number, from: string, to: string): TotalRow[] {
   return db
