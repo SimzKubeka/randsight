@@ -95,7 +95,9 @@ test('the feature strip loops, pauses on hover and hides its duplicate from scre
   await page.waitForTimeout(400)
   expect(await offset()).toBeLessThan(before)
 
-  await features.hover()
+  // locator.hover() waits for the element to stop moving, which a marquee never does.
+  const box = (await features.boundingBox())!
+  await page.mouse.move(box.x + 120, box.y + box.height / 2)
   const held = await offset()
   await page.waitForTimeout(400)
   expect(await offset()).toBe(held)
