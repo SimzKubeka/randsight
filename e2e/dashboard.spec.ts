@@ -74,6 +74,16 @@ test('Medical opens its payments in a dialog and every way out returns to the sa
   await expect(medicalRow(page)).toBeFocused()
 })
 
+test('a long payment list opens at the top of the dialog', async ({ page }) => {
+  await signInAt(page, '/dashboard')
+  await page.getByRole('link', { name: 'Grocery spending R900 increase' }).click()
+  const heading = page.getByRole('heading', { level: 2, name: 'Grocery spending rose by R900.' })
+  await expect(heading).toBeFocused()
+  await page.waitForFunction(() => document.getAnimations().every((a) => a.playState !== 'running'))
+  const scrolled = await heading.evaluate((el) => el.closest('dialog')!.firstElementChild!.scrollTop)
+  expect(scrolled).toBe(0)
+})
+
 test('the dialog is modal: the page behind is out of reach', async ({ page }) => {
   await signInAt(page, '/dashboard?month=2026-10&category=medical')
   const dialog = page.getByRole('dialog', { name: 'Medical spending rose by R1,200.' })

@@ -604,9 +604,11 @@ html:has(.dialog[open]) {
   }
 }
 
+/* Links end in #detail; without this margin the hash scroll pushes the heading up into the dialog's top padding. */
 .detailTitle {
   margin: 0 0 var(--rs-space-6);
   padding-right: var(--rs-space-2);
+  scroll-margin-top: var(--rs-space-8);
   font-family: var(--rs-font-serif);
   font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
   font-weight: var(--rs-weight-semibold);
