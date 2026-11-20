@@ -12,7 +12,7 @@
 
 .notice {
   padding: var(--rs-space-3) var(--rs-space-4);
-  border-left: 4px solid var(--rs-accent);
+  border: 1px solid var(--rs-blue-600);
   background: var(--rs-blue-50);
   border-radius: var(--rs-radius);
 }
