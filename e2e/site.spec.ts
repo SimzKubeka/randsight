@@ -83,7 +83,7 @@ test('public pages have no accessibility violations', async ({ page }) => {
   }
 })
 
-test('the feature strip loops, pauses on request and hides its duplicate from screen readers', async ({ page }) => {
+test('the feature strip loops, pauses on hover and hides its duplicate from screen readers', async ({ page }) => {
   await page.goto('/')
   const features = page.getByRole('list', { name: 'Features' })
   await features.scrollIntoViewIfNeeded()
@@ -95,9 +95,7 @@ test('the feature strip loops, pauses on request and hides its duplicate from sc
   await page.waitForTimeout(400)
   expect(await offset()).toBeLessThan(before)
 
-  await page.getByRole('button', { name: /^Pause/ }).click()
-  await expect(page.getByRole('button', { name: /^Play/ })).toBeVisible()
-  await page.mouse.move(0, 0) // hovering also pauses; make sure only the button is holding it
+  await features.hover()
   const held = await offset()
   await page.waitForTimeout(400)
   expect(await offset()).toBe(held)

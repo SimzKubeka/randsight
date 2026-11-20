@@ -296,32 +296,7 @@
 /* ---------- features: an endless strip ---------- */
 
 .marquee {
-  display: grid;
-  gap: var(--rs-space-6);
   margin-top: var(--rs-space-8);
-}
-
-.pause {
-  display: inline-flex;
-  align-items: center;
-  justify-self: end;
-  gap: var(--rs-space-2);
-  min-height: var(--rs-tap);
-  padding-inline: var(--rs-space-4);
-  border: 1px solid var(--rs-rule-strong);
-  border-radius: 999px;
-  background: var(--rs-surface);
-  color: var(--rs-ink);
-  font: inherit;
-  font-size: var(--rs-text-sm);
-  font-weight: var(--rs-weight-semibold);
-  cursor: pointer;
-  transition: background-color 150ms ease-out;
-}
-
-.pause:hover {
-  background: var(--rs-blue-50);
-  color: var(--rs-blue);
 }
 
 /* Full-bleed, with the edges fading out so cards slide in from nowhere. */
@@ -595,7 +570,6 @@
 
 /* Reduced motion: no loop. One copy, scrolled by hand. */
 @media (prefers-reduced-motion: reduce) {
-  .pause,
   .belt[aria-hidden] {
     display: none;
   }

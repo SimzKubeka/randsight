@@ -20,11 +20,10 @@ function Cards({ features }: { features: Feature[] }) {
 
 /**
  * An endless strip: the list is rendered twice and the pair slides by one list-width, so the loop has no seam.
- * The copy is hidden from assistive tech. It pauses on hover, on the button, and whenever it is off screen.
+ * The copy is hidden from assistive tech. It pauses on hover and whenever it is off screen.
  */
 export function FeatureMarquee({ features }: { features: Feature[] }) {
   const root = useRef<HTMLDivElement>(null)
-  const [paused, setPaused] = useState(false)
   const [onScreen, setOnScreen] = useState(true)
 
   useEffect(() => {
@@ -36,12 +35,7 @@ export function FeatureMarquee({ features }: { features: Feature[] }) {
   }, [])
 
   return (
-    <div ref={root} className={styles.marquee} data-paused={paused || !onScreen || undefined}>
-      <button type="button" className={styles.pause} onClick={() => setPaused((p) => !p)}>
-        <Icon name={paused ? 'play' : 'pause'} />
-        {paused ? 'Play' : 'Pause'}
-        <span className="sr-only"> moving features</span>
-      </button>
+    <div ref={root} className={styles.marquee} data-paused={!onScreen || undefined}>
       <div className={styles.track}>
         <ul className={styles.belt} aria-label="Features">
           <Cards features={features} />
