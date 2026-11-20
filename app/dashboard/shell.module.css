@@ -30,6 +30,8 @@
   top: 0;
   z-index: 20;
   display: flex;
+  /* With enlarged text the wordmark and Menu no longer fit on one line; wrap instead of pushing Menu off screen. */
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--rs-space-4);
   min-height: 4rem;
@@ -200,6 +202,12 @@
 
 .footer p {
   margin: 0;
+}
+
+/* Room to tap: the link text alone is under the 24 px minimum target. */
+.footer a {
+  display: inline-block;
+  padding-block: 0.25rem;
 }
 
 /* ---------- breakpoints ---------- */

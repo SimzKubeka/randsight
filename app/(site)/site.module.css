@@ -92,6 +92,12 @@
   margin: 0;
 }
 
+/* Room to tap: the link text alone is under the 24 px minimum target. */
+.footer a {
+  display: inline-block;
+  padding-block: 0.25rem;
+}
+
 @media (min-width: 64rem) {
   .header,
   .footer {
