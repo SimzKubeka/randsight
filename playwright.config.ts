@@ -1,6 +1,8 @@
 import { defineConfig, devices } from '@playwright/test'
 
-const baseURL = 'http://localhost:3000'
+// Own port so a running dev server on 3000 is never reused by mistake.
+const port = 3100
+const baseURL = `http://localhost:${port}`
 
 export default defineConfig({
   testDir: 'e2e',
@@ -15,6 +17,7 @@ export default defineConfig({
   webServer: {
     command: 'npm run build && npm start',
     url: baseURL,
+    env: { PORT: String(port) },
     reuseExistingServer: !process.env.CI,
     timeout: 180_000,
   },
