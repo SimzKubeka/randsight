@@ -94,8 +94,11 @@ test('the spending chart has a table with the same numbers', async ({ page }) =>
 })
 
 test('review and detail have no accessibility violations', async ({ page }) => {
+  // Next streams metadata on dynamic pages, so wait for the title before auditing.
   await signInAt(page, '/dashboard')
+  await expect(page).toHaveTitle(/RandSight/)
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([])
   await page.goto('/dashboard?month=2026-10&category=medical')
+  await expect(page).toHaveTitle(/RandSight/)
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([])
 })

@@ -74,6 +74,21 @@ test('robots and sitemap list only public pages', async ({ request }) => {
 test('public pages have no accessibility violations', async ({ page }) => {
   for (const path of PUBLIC) {
     await page.goto(path)
+    await expect(page).toHaveTitle(/RandSight/)
     expect((await new AxeBuilder({ page }).analyze()).violations, path).toEqual([])
   }
+})
+
+test('the feature carousel moves with its buttons and stays keyboard-reachable', async ({ page }) => {
+  await page.goto('/')
+  const previous = page.getByRole('button', { name: 'Previous feature' })
+  const next = page.getByRole('button', { name: 'Next feature' })
+  const rail = page.getByRole('group', { name: /Features, scroll sideways/ })
+  await rail.scrollIntoViewIfNeeded()
+  await expect(previous).toBeDisabled()
+  await next.click()
+  await expect(previous).toBeEnabled()
+  expect(await rail.evaluate((el) => el.scrollLeft)).toBeGreaterThan(0)
+  await rail.focus()
+  await expect(rail).toBeFocused()
 })
