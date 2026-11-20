@@ -41,6 +41,7 @@ test('choosing a page from the navigation goes there and closes the menu', async
 
   await expect(page).toHaveURL('/dashboard/live-track')
   await expect(page.getByRole('heading', { level: 1, name: 'Live Track' })).toBeVisible()
+  await expect(page).toHaveTitle('Live Track · RandSight')
   if (!isDesktop(page)) await expect(page.getByRole('navigation', { name: 'Main' })).toBeHidden()
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
 })
