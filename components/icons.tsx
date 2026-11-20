@@ -10,6 +10,8 @@ const PATHS = {
   lock: 'M6 11h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM8 11V7a4 4 0 0 1 8 0v4',
   check: 'M20 6L9 17l-5-5',
   arrowRight: 'M5 12h14M13 6l6 6-6 6',
+  pause: 'M9 5v14M15 5v14',
+  play: 'M7 5l12 7-12 7z',
   chevronLeft: 'M15 18l-6-6 6-6',
   chevronRight: 'M9 18l6-6-6-6',
   menu: 'M4 7h16M4 12h16M4 17h16',

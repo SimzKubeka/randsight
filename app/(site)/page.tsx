@@ -5,7 +5,7 @@ import { publicMetadata } from '@/lib/site.ts'
 import desktopShot from '@/public/screens/dashboard-desktop.jpg'
 import phoneShot from '@/public/screens/dashboard-mobile.jpg'
 import medicalShot from '@/public/screens/medical-mobile.jpg'
-import { FeatureCarousel } from './feature-carousel.tsx'
+import { FeatureMarquee } from './feature-marquee.tsx'
 import styles from './landing.module.css'
 
 const description = 'See what changed from one month to the next, down to the payments that made the difference.'
@@ -107,7 +107,7 @@ export default function Home() {
         <h2 id="features-title" className={styles.heading}>
           Built for the way you check your money
         </h2>
-        <FeatureCarousel features={FEATURES} />
+        <FeatureMarquee features={FEATURES} />
       </section>
 
       <section className={`${styles.section} ${styles.split}`} aria-labelledby="detail-title">

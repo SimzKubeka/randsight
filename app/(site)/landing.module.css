@@ -104,6 +104,7 @@
 /* ---------- hero ---------- */
 
 .hero {
+  --tilt-from: rotateX(16deg) scale(0.93);
   overflow-x: clip;
   padding: var(--rs-space-10) var(--rs-gutter) 0;
   background: linear-gradient(var(--rs-surface) 52%, var(--rs-canvas) 52%);
@@ -292,94 +293,59 @@
   font-weight: var(--rs-weight-bold);
 }
 
-/* ---------- features carousel ---------- */
+/* ---------- features: an endless strip ---------- */
 
-.carousel {
+.marquee {
+  display: grid;
+  gap: var(--rs-space-6);
   margin-top: var(--rs-space-8);
 }
 
-.carouselControls {
-  display: flex;
+.pause {
+  display: inline-flex;
   align-items: center;
+  justify-self: end;
   gap: var(--rs-space-2);
-  margin-bottom: var(--rs-space-5);
-}
-
-.progress {
-  flex: 1;
-  height: 2px;
-  margin-right: var(--rs-space-4);
-  overflow: hidden;
-  border-radius: 2px;
-  background: var(--rs-rule);
-}
-
-.progress span {
-  display: block;
-  height: 100%;
-  background: var(--rs-blue);
-  transform-origin: 0 50%;
-  transition: transform 200ms ease-out;
-}
-
-.navButton {
-  display: inline-grid;
-  place-items: center;
-  width: var(--rs-tap);
-  height: var(--rs-tap);
+  min-height: var(--rs-tap);
+  padding-inline: var(--rs-space-4);
   border: 1px solid var(--rs-rule-strong);
-  border-radius: 50%;
+  border-radius: 999px;
   background: var(--rs-surface);
   color: var(--rs-ink);
+  font: inherit;
+  font-size: var(--rs-text-sm);
+  font-weight: var(--rs-weight-semibold);
   cursor: pointer;
-  transition:
-    background-color 150ms ease-out,
-    opacity 150ms ease-out;
+  transition: background-color 150ms ease-out;
 }
 
-.navButton:hover:not(:disabled) {
+.pause:hover {
   background: var(--rs-blue-50);
   color: var(--rs-blue);
 }
 
-.navButton:disabled {
-  opacity: 0.4;
-  cursor: default;
-}
-
-/* Full-bleed rail: the first slide lines up with the content, later slides run off the edge. */
-.rail {
-  display: grid;
-  grid-auto-columns: clamp(16rem, 78vw, 24rem);
-  grid-auto-flow: column;
-  column-gap: var(--rs-space-4);
-  margin: 0 calc(-1 * var(--bleed));
-  padding: var(--rs-space-2) var(--bleed) var(--rs-space-6);
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
-  scroll-padding-inline: var(--bleed);
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;
-  list-style: none;
-}
-
-.rail::-webkit-scrollbar {
-  display: none;
-}
-
-.rail:focus-visible {
-  outline-offset: -3px;
-}
-
-.slide {
+/* Full-bleed, with the edges fading out so cards slide in from nowhere. */
+.track {
+  --gap: var(--rs-space-5);
   display: flex;
-  scroll-snap-align: start;
+  margin-inline: calc(-1 * var(--bleed));
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+}
+
+.belt {
+  display: flex;
+  flex-shrink: 0;
+  gap: var(--gap);
+  margin: 0;
+  padding: var(--rs-space-3) var(--gap) var(--rs-space-8) 0;
+  list-style: none;
 }
 
 .card {
   display: flex;
-  flex: 1;
   flex-direction: column;
+  width: clamp(16rem, 72vw, 22rem);
   min-height: 17rem;
   padding: var(--rs-space-8) var(--rs-space-6) var(--rs-space-6);
   border-radius: 1rem;
@@ -389,7 +355,7 @@
     0 12px 32px -12px rgb(17 20 24 / 0.14);
 }
 
-.slideIcon {
+.cardIcon {
   display: inline-grid;
   place-items: center;
   width: 3rem;
@@ -510,6 +476,57 @@
 }
 
 @media (min-width: 64rem) {
+  /* Desktop hero: text on the left, the product running off the right edge, turned towards the words. */
+  .hero {
+    --tilt-from: rotateY(-18deg) rotateX(4deg) scale(0.94);
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    align-items: center;
+    gap: var(--rs-space-12);
+    min-height: calc(100svh - 4rem);
+    padding: var(--rs-space-10) 0 var(--rs-space-12) var(--bleed);
+    background: var(--rs-surface);
+    text-align: left;
+  }
+
+  .heroText {
+    max-width: 34rem;
+    margin: 0;
+  }
+
+  .title {
+    font-size: clamp(3rem, 1rem + 4.2vw, 5.25rem);
+  }
+
+  .lead {
+    margin-left: 0;
+  }
+
+  .actions {
+    justify-content: flex-start;
+  }
+
+  .showcase {
+    max-width: none;
+    margin: 0;
+    padding-bottom: 0;
+  }
+
+  .tilt {
+    transform-origin: 0 50%;
+  }
+
+  .heroPhone {
+    top: 26%;
+    right: auto;
+    left: -9%;
+  }
+
+  .caption {
+    padding-left: var(--rs-space-2);
+    text-align: left;
+  }
+
   .section {
     padding-block: calc(var(--rs-space-12) * 2);
   }
@@ -555,9 +572,43 @@
     animation: fade-up 900ms var(--ease-out) 300ms both;
   }
 
+  .belt {
+    animation: belt 48s linear infinite;
+  }
+
+  .track:hover .belt,
+  .marquee[data-paused] .belt {
+    animation-play-state: paused;
+  }
+
   /* The phone falls into place and settles at its resting angle. */
   .drop {
     animation: drop 1100ms var(--ease-out) 650ms both;
+  }
+}
+
+@keyframes belt {
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+/* Reduced motion: no loop. One copy, scrolled by hand. */
+@media (prefers-reduced-motion: reduce) {
+  .pause,
+  .belt[aria-hidden] {
+    display: none;
+  }
+
+  .track {
+    overflow-x: auto;
+    padding-inline: var(--bleed);
+    mask-image: none;
+    scroll-snap-type: x mandatory;
+  }
+
+  .card {
+    scroll-snap-align: start;
   }
 }
 
@@ -621,12 +672,6 @@
       animation-range: cover 52% cover 64%;
     }
 
-    /* Slides come forward as they reach the centre of the rail. */
-    .card {
-      animation: focus-slide linear both;
-      animation-timeline: view(inline);
-    }
-
     .splitPhone {
       animation: settle linear both;
       animation-timeline: view();
@@ -648,7 +693,7 @@
 
 @keyframes flatten {
   from {
-    transform: rotateX(16deg) scale(0.93);
+    transform: var(--tilt-from);
   }
 }
 
@@ -661,24 +706,6 @@
 @keyframes fill {
   from {
     transform: scaleX(0);
-  }
-}
-
-@keyframes focus-slide {
-  0% {
-    opacity: 0.55;
-    transform: scale(0.92);
-  }
-
-  30%,
-  70% {
-    opacity: 1;
-    transform: none;
-  }
-
-  100% {
-    opacity: 0.55;
-    transform: scale(0.92);
   }
 }
 
