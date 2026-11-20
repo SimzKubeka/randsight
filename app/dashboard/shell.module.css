@@ -1,6 +1,18 @@
-/* Phones and tablets: top bar with a hamburger. Desktop (≥ 64rem): left sidebar. */
+/* App shell. Phones and tablets: top bar with a hamburger. Desktop (≥ 64rem): sidebar + top bar. */
 
 .shell {
+  min-height: 100vh;
+  background: var(--rs-surface);
+}
+
+.sidebar {
+  display: none;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
   min-height: 100vh;
 }
 
@@ -11,11 +23,7 @@
   text-decoration: none;
 }
 
-/* ---------- top bar + hamburger ---------- */
-
-.sidebar {
-  display: none;
-}
+/* ---------- top bar ---------- */
 
 .topbar {
   position: sticky;
@@ -23,12 +31,63 @@
   z-index: 20;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  min-height: 3.75rem;
+  gap: var(--rs-space-4);
+  min-height: 4rem;
   padding-inline: var(--rs-gutter);
   border-bottom: 1px solid var(--rs-rule);
   background: var(--rs-surface);
 }
+
+.today {
+  margin: 0;
+  color: var(--rs-ink-2);
+  font-size: var(--rs-text-sm);
+  font-weight: var(--rs-weight-semibold);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-3);
+  margin-left: auto;
+}
+
+.iconButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--rs-tap);
+  height: var(--rs-tap);
+  border-radius: var(--rs-radius-sm);
+  color: var(--rs-ink-2);
+}
+
+.iconButton:hover {
+  background: var(--rs-canvas);
+  color: var(--rs-ink);
+}
+
+.account {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--rs-space-2);
+  padding-left: var(--rs-space-4);
+  border-left: 1px solid var(--rs-rule);
+  font-weight: var(--rs-weight-semibold);
+}
+
+.avatar {
+  display: inline-grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  background: var(--rs-blue-50);
+  color: var(--rs-blue);
+  font-weight: var(--rs-weight-bold);
+}
+
+/* ---------- hamburger ---------- */
 
 .menuButton {
   display: inline-flex;
@@ -48,15 +107,6 @@
   display: none;
 }
 
-.icon {
-  width: 1.25rem;
-  height: 1.25rem;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-}
-
 .menu[open] .iconOpen,
 .menu:not([open]) .iconClose {
   display: none;
@@ -67,27 +117,34 @@
   top: 100%;
   right: 0;
   left: 0;
-  padding: var(--rs-space-3) var(--rs-gutter) var(--rs-space-5);
+  padding: var(--rs-space-2) var(--rs-gutter) var(--rs-space-5);
   border-bottom: 1px solid var(--rs-rule);
   background: var(--rs-surface);
   box-shadow: 0 12px 24px rgb(17 20 24 / 0.1);
 }
 
-/* ---------- navigation items (both places) ---------- */
+/* ---------- navigation items (sidebar and menu) ---------- */
+
+.groupTitle {
+  margin: var(--rs-space-5) 0 var(--rs-space-2);
+  padding-inline: var(--rs-space-3);
+  color: var(--rs-ink-3);
+  font-size: var(--rs-text-sm);
+  font-weight: var(--rs-weight-semibold);
+}
 
 .navList {
   display: grid;
-  gap: var(--rs-space-1);
+  gap: 2px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.navLink,
-.foot a,
-.foot button {
+.navLink {
   display: flex;
   align-items: center;
+  gap: var(--rs-space-3);
   width: 100%;
   min-height: var(--rs-tap);
   padding-inline: var(--rs-space-3);
@@ -101,45 +158,64 @@
   cursor: pointer;
 }
 
-.navLink {
-  font-weight: var(--rs-weight-semibold);
+.navLink svg {
+  flex-shrink: 0;
+  color: var(--rs-ink-3);
 }
 
-.navLink:hover,
-.foot a:hover,
-.foot button:hover {
-  background: var(--rs-canvas);
+.navLink:hover {
+  background: var(--rs-rule);
   color: var(--rs-ink);
 }
 
 .navLink[aria-current='page'] {
   background: var(--rs-blue-50);
   color: var(--rs-blue);
+  font-weight: var(--rs-weight-semibold);
+}
+
+.navLink[aria-current='page'] svg {
+  color: var(--rs-blue);
 }
 
 .foot {
-  display: grid;
-  gap: var(--rs-space-1);
-  margin-top: var(--rs-space-4);
+  margin: var(--rs-space-5) 0 0;
   padding-top: var(--rs-space-4);
   border-top: 1px solid var(--rs-rule);
 }
 
-.foot a,
-.foot button {
+/* ---------- footer ---------- */
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--rs-space-2) var(--rs-space-6);
+  margin-top: auto;
+  padding: var(--rs-space-5) var(--rs-gutter);
+  border-top: 1px solid var(--rs-rule);
   color: var(--rs-ink-2);
+  font-size: var(--rs-text-sm);
 }
 
-/* ---------- desktop sidebar ---------- */
+.footer p {
+  margin: 0;
+}
+
+/* ---------- breakpoints ---------- */
+
+@media (max-width: 63.99rem) {
+  .today,
+  .iconButton,
+  .account {
+    display: none;
+  }
+}
 
 @media (min-width: 64rem) {
   .shell {
     display: grid;
-    grid-template-columns: 15rem minmax(0, 1fr);
-  }
-
-  .topbar {
-    display: none;
+    grid-template-columns: 16rem minmax(0, 1fr);
   }
 
   .sidebar {
@@ -151,16 +227,25 @@
     padding: var(--rs-space-6) var(--rs-space-4);
     overflow-y: auto;
     border-right: 1px solid var(--rs-rule);
-    background: var(--rs-surface);
+    background: var(--rs-canvas);
   }
 
   .sidebar .home {
-    margin-bottom: var(--rs-space-8);
+    margin-bottom: var(--rs-space-2);
     padding-inline: var(--rs-space-3);
   }
 
-  /* Docs and Sign out sit at the bottom of the sidebar. */
+  /* Sign out sits at the bottom of the sidebar. */
   .sidebar .foot {
     margin-top: auto;
+  }
+
+  .mobileOnly {
+    display: none;
+  }
+
+  .topbar,
+  .footer {
+    padding-inline: var(--rs-space-10);
   }
 }

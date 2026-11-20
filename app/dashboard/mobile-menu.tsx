@@ -1,6 +1,7 @@
 'use client'
 
 import { useRef } from 'react'
+import { Icon } from '@/components/icons.tsx'
 import styles from './shell.module.css'
 
 /** Hamburger for phones and tablets. A native <details>, so it opens without JavaScript; closes on Escape or when a link is chosen. */
@@ -22,12 +23,8 @@ export function MobileMenu({ children }: { children: React.ReactNode }) {
       onKeyDown={(e) => e.key === 'Escape' && close(true)}
     >
       <summary className={styles.menuButton}>
-        <svg className={`${styles.icon} ${styles.iconOpen}`} viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M4 7h16M4 12h16M4 17h16" />
-        </svg>
-        <svg className={`${styles.icon} ${styles.iconClose}`} viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M6 6l12 12M18 6L6 18" />
-        </svg>
+        <Icon name="menu" className={styles.iconOpen} />
+        <Icon name="close" className={styles.iconClose} />
         Menu
       </summary>
       <div className={styles.menuPanel}>{children}</div>
