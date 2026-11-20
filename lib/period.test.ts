@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { monthName, monthOf } from './period'
+import { monthName, monthOf } from './period.ts'
 
 describe('monthOf (Africa/Johannesburg)', () => {
   it('puts 23:30 SAST on 31 Oct in October although it is 21:30 UTC', () => {

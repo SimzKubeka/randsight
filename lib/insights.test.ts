@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { describeChange, explainChange, monthTotals, type TotalRow } from './insights'
+import { describeChange, explainChange, monthTotals, type TotalRow } from './insights.ts'
 
 const R = (rands: number) => rands * 100
 

@@ -1,5 +1,5 @@
-import { formatRand } from './money'
-import { monthName } from './period'
+import { formatRand } from './money.ts'
+import { monthName } from './period.ts'
 
 export type Kind = 'income' | 'spend' | 'refund' | 'transfer'
 
