@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import styles from './dashboard.module.css'
+import styles from './shell.module.css'
 
 const LINKS = [
   ['/dashboard', 'Review'],
