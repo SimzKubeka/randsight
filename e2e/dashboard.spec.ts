@@ -1,0 +1,101 @@
+import AxeBuilder from '@axe-core/playwright'
+import { expect, test, type Page } from '@playwright/test'
+
+async function signInAt(page: Page, path: string) {
+  await page.goto(path)
+  await page.getByLabel('Email address').fill('thandi@randsight.example')
+  await page.getByLabel('Password').fill('hindsight-demo')
+  await page.getByRole('button', { name: 'Sign in' }).click()
+  await expect(page).toHaveURL(path)
+}
+
+const noHorizontalScroll = (page: Page) =>
+  page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)
+
+const medicalRow = (page: Page) => page.getByRole('link', { name: 'Medical spending R1,200 increase' })
+
+test('October answers the question before any chart', async ({ page }) => {
+  await signInAt(page, '/dashboard')
+  await expect(page.getByRole('heading', { level: 1, name: 'Monthly review' })).toBeVisible()
+  await expect(page.getByText('October 2026').first()).toBeVisible()
+  await expect(page.getByText('R10,700', { exact: true })).toBeVisible()
+  await expect(page.getByText('Left after spending')).toBeVisible()
+  await expect(page.getByText('You had R2,700 less left over in October.')).toBeVisible()
+  await expect(page.getByText('R600 less came in and you spent R2,100 more than in September.')).toBeVisible()
+
+  const changes = page.getByRole('list', { name: 'What changed' }).getByRole('link')
+  await expect(changes).toHaveText([/Salary received.*R600/, /Medical spending.*R1,200/, /Grocery spending.*R900/])
+
+  // On phones the medical row sits above the chart; on desktop the chart is beside the rows.
+  if (page.viewportSize()!.width < 1024) {
+    const rowTop = (await medicalRow(page).boundingBox())!.y
+    const chartTop = (await page.getByRole('img', { name: 'Monthly spending' }).boundingBox())!.y
+    expect(rowTop).toBeLessThan(chartTop)
+  }
+  expect(await noHorizontalScroll(page)).toBe(true)
+})
+
+test('Medical leads to its payments and back to the same row', async ({ page }) => {
+  await signInAt(page, '/dashboard')
+  await medicalRow(page).click()
+
+  await expect(page).toHaveURL(/month=2026-10&category=medical/)
+  const heading = page.getByRole('heading', { level: 1, name: 'Medical spending rose by R1,200.' })
+  await expect(heading).toBeFocused()
+  const payments = page.getByRole('list', { name: 'October payments' })
+  await expect(payments.getByRole('listitem')).toHaveCount(3)
+  await expect(payments).toContainText('Fernwood Paediatrics')
+  await expect(payments).toContainText(/(^|\D)7 Oct/) // not "07 Oct"
+  await expect(payments).toContainText('R950')
+  await expect(payments).toContainText('Your note: Six-week check-up')
+  await expect(page.getByText('Total R1,600')).toBeVisible()
+  expect(await noHorizontalScroll(page)).toBe(true)
+
+  await page.getByRole('link', { name: 'All of October' }).click()
+  await expect(page).not.toHaveURL(/category=/)
+  await expect(medicalRow(page)).toBeFocused()
+
+  await medicalRow(page).click()
+  await expect(heading).toBeFocused()
+  await page.goBack()
+  await expect(medicalRow(page)).toBeFocused()
+})
+
+test('a bookmarked Medical view survives refresh and the keyboard reaches it', async ({ page }) => {
+  await signInAt(page, '/dashboard?month=2026-10&category=medical')
+  await page.reload()
+  await expect(page.getByRole('heading', { level: 1, name: 'Medical spending rose by R1,200.' })).toBeVisible()
+
+  await page.goto('/dashboard')
+  await medicalRow(page).focus()
+  await page.keyboard.press('Enter')
+  await expect(page).toHaveURL(/category=medical/)
+})
+
+test('another month can be chosen and odd parameters fall back safely', async ({ page }) => {
+  await signInAt(page, '/dashboard')
+  await page.getByText('October 2026', { exact: true }).first().click()
+  await page.getByRole('link', { name: 'September 2026' }).click()
+  await expect(page).toHaveURL(/month=2026-09/)
+  await expect(page.getByText('R13,400', { exact: true })).toBeVisible()
+
+  await page.goto('/dashboard?month=1999-01&category=nonsense&page=-4')
+  await expect(page.getByText('R10,700', { exact: true })).toBeVisible()
+  await expect(page.getByRole('heading', { level: 1, name: 'Monthly review' })).toBeVisible()
+})
+
+test('the spending chart has a table with the same numbers', async ({ page }) => {
+  await signInAt(page, '/dashboard')
+  await expect(page.getByText('Spending rose from R16,600 in September to R18,700 in October.')).toBeVisible()
+  await page.getByText('Show as table').click()
+  const table = page.getByRole('table', { name: 'Monthly spending' })
+  await expect(table.getByRole('row', { name: /September.*R16,600/ })).toBeVisible()
+  await expect(table.getByRole('row', { name: /October.*R18,700/ })).toBeVisible()
+})
+
+test('review and detail have no accessibility violations', async ({ page }) => {
+  await signInAt(page, '/dashboard')
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([])
+  await page.goto('/dashboard?month=2026-10&category=medical')
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([])
+})

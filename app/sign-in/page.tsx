@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { cookies } from 'next/headers'
+import Link from 'next/link'
 import { redirect } from 'next/navigation'
+import { Wordmark } from '@/components/wordmark.tsx'
 import { getSession, safeNext, SESSION_COOKIE } from '@/lib/auth.ts'
 import { getDb } from '@/lib/db.ts'
 import { DEMO } from '@/lib/seed.ts'
@@ -23,24 +25,28 @@ export default async function SignInPage({ searchParams }: Props) {
 
   return (
     <main className={`container ${styles.page}`}>
-      <p className={styles.brand}>RandSight</p>
-      <h1>Sign in</h1>
+      <Link href="/" className={styles.home}>
+        <Wordmark />
+      </Link>
+      <div className="surface">
+        <h1>Sign in</h1>
 
-      {params.expired === '1' && <p className={styles.notice}>Your session expired. Sign in again.</p>}
-      {params['signed-out'] === '1' && <p className={styles.notice}>You have signed out.</p>}
+        {params.expired === '1' && <p className={styles.notice}>Your session expired. Sign in again.</p>}
+        {params['signed-out'] === '1' && <p className={styles.notice}>You have signed out.</p>}
 
-      <SignInForm next={next} />
+        <SignInForm next={next} />
 
-      <section className={styles.demo} aria-labelledby="demo-heading">
-        <h2 id="demo-heading">Demo account</h2>
-        <p>This is a demonstration with a fictional customer.</p>
-        <dl>
-          <dt>Email</dt>
-          <dd>{DEMO.email}</dd>
-          <dt>Password</dt>
-          <dd>{DEMO.password}</dd>
-        </dl>
-      </section>
+        <section className={styles.demo} aria-labelledby="demo-heading">
+          <h2 id="demo-heading">Demo login</h2>
+          <p>A fictional customer, for trying RandSight.</p>
+          <dl>
+            <dt>Email</dt>
+            <dd>{DEMO.email}</dd>
+            <dt>Password</dt>
+            <dd>{DEMO.password}</dd>
+          </dl>
+        </section>
+      </div>
     </main>
   )
 }

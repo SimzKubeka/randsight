@@ -8,8 +8,8 @@ const deepLink = '/dashboard?month=2026-10&category=medical'
 // Next.js adds its own role="alert" route announcer, so match the summary by its heading.
 const problemSummary = (page: Page) => page.getByRole('alert').filter({ hasText: 'There is a problem' })
 
-async function signIn(page: Page, password = 'hindsight-demo') {
-  await page.getByLabel('Email address').fill('thandi@randsight.example')
+async function signIn(page: Page, password = 'hindsight-demo', email = 'thandi@randsight.example') {
+  await page.getByLabel('Email address').fill(email)
   await page.getByLabel('Password').fill(password)
   await page.getByRole('button', { name: 'Sign in' }).click()
 }
@@ -41,7 +41,8 @@ test('missing fields and a wrong password show accessible errors', async ({ page
   await expect(summary).toContainText('Enter your email address')
   await expect(page.getByLabel('Email address')).toHaveAttribute('aria-invalid', 'true')
 
-  await signIn(page, 'wrong-password')
+  // A fresh unknown address, so repeated runs never trip the throttle for the demo account.
+  await signIn(page, 'wrong-password', `nobody-${Date.now()}@randsight.example`)
   await expect(problemSummary(page)).toContainText('Email or password is incorrect.')
   await expect(page).toHaveURL(/\/sign-in/)
 })
@@ -67,6 +68,10 @@ test('an expired session returns to sign-in with a message, then back to the pag
 test('sign-out ends the session', async ({ page }) => {
   await page.goto('/sign-in')
   await signIn(page)
+  await expect(page).toHaveURL('/dashboard')
+  // Phones keep Sign out behind the hamburger; desktop shows it in the sidebar.
+  const menu = page.getByText('Menu', { exact: true })
+  if (await menu.isVisible()) await menu.click()
   await page.getByRole('button', { name: 'Sign out' }).click()
   await expect(page).toHaveURL('/sign-in?signed-out=1')
   await expect(page.getByText('You have signed out.')).toBeVisible()

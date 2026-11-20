@@ -5,6 +5,8 @@ const noStore = [{ key: 'Cache-Control', value: 'private, no-store' }]
 const nextConfig: NextConfig = {
   output: 'standalone',
   poweredByHeader: false,
+  // The dev-only route indicator sat over the sidebar's Sign out button.
+  devIndicators: false,
   async headers() {
     return [
       {

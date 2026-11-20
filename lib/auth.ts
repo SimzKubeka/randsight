@@ -66,3 +66,11 @@ export function recordFailure(key: string, now = Date.now()) {
 }
 
 export const clearFailures = (key: string) => failures.delete(key)
+
+/** Read-only: the signed-in customer for display (e.g. a name in the layout). No redirect and no clean-up, so it can't race the page's own check. */
+export function activeCustomerId(db: DatabaseSync, token: string, now = Date.now()): number | null {
+  const row = db.prepare('SELECT customer_id FROM sessions WHERE id = ? AND expires_at > ?').get(hashToken(token), now) as
+    | { customer_id: number }
+    | undefined
+  return row?.customer_id ?? null
+}
