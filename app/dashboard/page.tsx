@@ -7,12 +7,12 @@ import { getDb } from '@/lib/db.ts'
 import { describeChange, explainChange, monthTotals, type Driver } from '@/lib/insights.ts'
 import { formatRand } from '@/lib/money.ts'
 import { DEMO_NOW, monthLabel, monthName, monthOf, shiftMonth } from '@/lib/period.ts'
-import { CategoryDetail } from './category-detail.tsx'
+import { CategoryDetail } from './_components/category-detail.tsx'
 import styles from './dashboard.module.css'
-import { DetailDialog } from './detail-dialog.tsx'
-import { FocusReturn } from './focus-return.tsx'
-import { MonthPicker } from './month-picker.tsx'
-import { SpendingChart } from './spending-chart.tsx'
+import { DetailDialog } from './_components/detail-dialog.tsx'
+import { FocusReturn } from './_components/focus-return.tsx'
+import { MonthPicker } from './_components/month-picker.tsx'
+import { SpendingChart } from './_components/spending-chart.tsx'
 
 type Props = { searchParams: Promise<Record<string, string | string[] | undefined>> }
 

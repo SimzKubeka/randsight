@@ -8,8 +8,8 @@ import { getCustomerName } from '@/lib/data.ts'
 import { getDb } from '@/lib/db.ts'
 import { DEMO_NOW, TIME_ZONE } from '@/lib/period.ts'
 import { signOut } from './actions.ts'
-import { MobileMenu } from './mobile-menu.tsx'
-import { NavLinks } from './nav-links.tsx'
+import { MobileMenu } from './_components/mobile-menu.tsx'
+import { NavLinks } from './_components/nav-links.tsx'
 import styles from './shell.module.css'
 
 export const metadata: Metadata = {

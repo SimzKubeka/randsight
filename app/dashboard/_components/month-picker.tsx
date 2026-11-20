@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { Icon } from '@/components/icons.tsx'
 import { monthLabel } from '@/lib/period.ts'
-import styles from './dashboard.module.css'
+import styles from '../dashboard.module.css'
 
 export function MonthPicker({ months, month, category }: { months: string[]; month: string; category: string | null }) {
   const href = (m: string) => `/dashboard?month=${m}${category ? `&category=${category}` : ''}`

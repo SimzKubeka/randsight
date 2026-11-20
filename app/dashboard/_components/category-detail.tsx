@@ -3,7 +3,7 @@ import { rowLabel } from '@/lib/categories.ts'
 import { PAGE_SIZE, type Transaction } from '@/lib/data.ts'
 import { formatRand } from '@/lib/money.ts'
 import { monthName, TIME_ZONE } from '@/lib/period.ts'
-import styles from './dashboard.module.css'
+import styles from '../dashboard.module.css'
 
 // en-GB gives '7 Oct'; en-ZA pads the day to '07 Oct'.
 const day = new Intl.DateTimeFormat('en-GB', { timeZone: TIME_ZONE, day: 'numeric', month: 'short' })

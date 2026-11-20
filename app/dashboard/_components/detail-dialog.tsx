@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation'
 import { useEffect, useRef } from 'react'
 import { Icon } from '@/components/icons.tsx'
-import styles from './dashboard.module.css'
+import styles from '../dashboard.module.css'
 
 /**
  * Category detail as a modal. The URL owns it: it opens when ?category= is present and closes by navigating to
