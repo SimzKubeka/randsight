@@ -1,0 +1,49 @@
+.page {
+  max-width: calc(var(--rs-form) + 2 * var(--rs-gutter));
+  padding-block: var(--rs-space-8) var(--rs-space-12);
+}
+
+.home {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--rs-tap);
+  margin-bottom: var(--rs-space-8);
+  text-decoration: none;
+}
+
+.lead {
+  margin: var(--rs-space-3) 0 var(--rs-space-6);
+  color: var(--rs-ink-2);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--rs-space-3) var(--rs-space-6);
+}
+
+.actions a,
+.actions button {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--rs-tap);
+}
+
+/* The one main action: a link on the 404 page, a button on the error page. */
+.actions .primary {
+  padding-inline: var(--rs-space-5);
+  border: 0;
+  font: inherit;
+  cursor: pointer;
+  border-radius: var(--rs-radius-sm);
+  background: var(--rs-action);
+  color: var(--rs-surface);
+  font-weight: var(--rs-weight-semibold);
+  text-decoration: none;
+}
+
+.actions .primary:hover {
+  background: var(--rs-blue-strong);
+  color: var(--rs-surface);
+}
