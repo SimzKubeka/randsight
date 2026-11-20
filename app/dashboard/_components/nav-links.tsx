@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Icon, type IconName } from '@/components/icons.tsx'
-import styles from './shell.module.css'
+import styles from '../shell.module.css'
 
 const GROUPS: { title: string; links: [href: string, label: string, icon: IconName][] }[] = [
   {

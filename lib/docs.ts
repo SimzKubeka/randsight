@@ -21,8 +21,6 @@ export const DOCS = [
   },
 ] as const
 
-export type DocSlug = (typeof DOCS)[number]['slug']
-
 /** Links written for GitHub (./x.md, diagrams/x.svg) become app routes. */
 export function rewriteLinks(html: string): string {
   return html

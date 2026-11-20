@@ -74,6 +74,13 @@
   box-sizing: border-box;
 }
 
+/* Slim, quiet scrollbars on the page and every scrolling panel (dialogs, tables, code).
+   scrollbar-width doesn't inherit, so it is set on every element. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--rs-rule-strong) transparent;
+}
+
 body {
   margin: 0;
   background: var(--rs-bg);

@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { Icon } from '@/components/icons.tsx'
 import { requireSession } from '@/lib/auth.ts'
 import { isCategory, rowLabel } from '@/lib/categories.ts'
 import { getMonths, getTotals, getTransactions } from '@/lib/data.ts'
@@ -6,11 +7,12 @@ import { getDb } from '@/lib/db.ts'
 import { describeChange, explainChange, monthTotals, type Driver } from '@/lib/insights.ts'
 import { formatRand } from '@/lib/money.ts'
 import { DEMO_NOW, monthLabel, monthName, monthOf, shiftMonth } from '@/lib/period.ts'
-import { CategoryDetail } from './category-detail.tsx'
+import { CategoryDetail } from './_components/category-detail.tsx'
 import styles from './dashboard.module.css'
-import { FocusReturn } from './focus-return.tsx'
-import { MonthPicker } from './month-picker.tsx'
-import { SpendingChart } from './spending-chart.tsx'
+import { DetailDialog } from './_components/detail-dialog.tsx'
+import { FocusReturn } from './_components/focus-return.tsx'
+import { MonthPicker } from './_components/month-picker.tsx'
+import { SpendingChart } from './_components/spending-chart.tsx'
 
 type Props = { searchParams: Promise<Record<string, string | string[] | undefined>> }
 
@@ -74,19 +76,20 @@ export default async function DashboardPage({ searchParams }: Props) {
   return (
     <main className={styles.page}>
       <FocusReturn key={`${month}|${category}|${detail ? detail.page : 0}`} />
-      <div className={styles.review} data-detail={category ? '' : undefined}>
+      <div className={styles.review}>
         <header className={styles.pageHead}>
           <div>
-            <p className={styles.eyebrow}>
+            <h1 className={styles.title}>Monthly review</h1>
+            <p className={styles.subtitle}>What changed from one month to the next, down to the payments that made the difference.</p>
+            <p className={styles.status}>
+              <span className={styles.statusDot} aria-hidden="true" />
               {monthLabel(month)} · Completed month · {months.length} months of records
             </p>
-            {category ? <p className={styles.title}>Monthly review</p> : <h1 className={styles.title}>Monthly review</h1>}
-            <p className={styles.subtitle}>What changed from one month to the next, down to the payments that made the difference.</p>
           </div>
           <MonthPicker months={months} month={month} category={category} />
         </header>
 
-        <div className={styles.overview}>
+        <div>
           <p className={styles.lead}>{copy ? `${copy.headline} ${copy.causes}` : 'There is no earlier month to compare with.'}</p>
 
           <div className={styles.stats}>
@@ -129,6 +132,7 @@ export default async function DashboardPage({ searchParams }: Props) {
                           {/* Spoken after the visible text, so voice control can still say what's on screen. */}
                           <span className="sr-only"> {d.changeCents > 0 ? 'increase' : 'decrease'}</span>
                         </span>
+                        <Icon name="chevronRight" className={styles.chevron} />
                       </Link>
                     </li>
                   ))}
@@ -171,28 +175,33 @@ export default async function DashboardPage({ searchParams }: Props) {
                         <span className="amount">{formatRand(curr.byCategory[key] ?? 0)}</span>
                         {words && <span className={`${styles.muted} amount`}>{words}</span>}
                       </span>
+                      <Icon name="chevronRight" className={styles.chevron} />
                     </Link>
                   </li>
                 )
               })}
             </ul>
           </section>
-
-          {category && detail ? (
-            <CategoryDetail
-              category={category}
-              month={month}
-              prevMonth={prev.month}
-              prevCents={amountIn(prev, category)}
-              currCents={amountIn(curr, category)}
-              returnId={drivers.some((d) => d.key === category) ? `change-${category}` : `category-${category}`}
-              rows={detail.rows}
-              count={detail.count}
-              page={detail.page}
-            />
-          ) : null}
         </div>
       </div>
+
+      {category && detail && (
+        <DetailDialog
+          // Closing returns to the row that opened it: a "What changed" row if there is one, otherwise the category list.
+          closeHref={`/dashboard?month=${month}#${drivers.some((d) => d.key === category) ? 'change' : 'category'}-${category}`}
+        >
+          <CategoryDetail
+            category={category}
+            month={month}
+            prevMonth={prev.month}
+            prevCents={amountIn(prev, category)}
+            currCents={amountIn(curr, category)}
+            rows={detail.rows}
+            count={detail.count}
+            page={detail.page}
+          />
+        </DetailDialog>
+      )}
     </main>
   )
 }

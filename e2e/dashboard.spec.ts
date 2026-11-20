@@ -35,36 +35,76 @@ test('October answers the question before any chart', async ({ page }) => {
   expect(await noHorizontalScroll(page)).toBe(true)
 })
 
-test('Medical leads to its payments and back to the same row', async ({ page }) => {
+test('Medical opens its payments in a dialog and every way out returns to the same row', async ({ page }) => {
   await signInAt(page, '/dashboard')
   await medicalRow(page).click()
 
   await expect(page).toHaveURL(/month=2026-10&category=medical/)
-  const heading = page.getByRole('heading', { level: 1, name: 'Medical spending rose by R1,200.' })
+  const dialog = page.getByRole('dialog', { name: 'Medical spending rose by R1,200.' })
+  await expect(dialog).toBeVisible()
+  const heading = dialog.getByRole('heading', { level: 2, name: 'Medical spending rose by R1,200.' })
   await expect(heading).toBeFocused()
-  const payments = page.getByRole('list', { name: 'October payments' })
+  const payments = dialog.getByRole('list', { name: 'October payments' })
   await expect(payments.getByRole('listitem')).toHaveCount(3)
   await expect(payments).toContainText('Fernwood Paediatrics')
   await expect(payments).toContainText(/(^|\D)7 Oct/) // not "07 Oct"
   await expect(payments).toContainText('R950')
   await expect(payments).toContainText('Your note: Six-week check-up')
-  await expect(page.getByText('Total R1,600')).toBeVisible()
+  await expect(dialog.getByText('Total R1,600')).toBeVisible()
   expect(await noHorizontalScroll(page)).toBe(true)
 
-  await page.getByRole('link', { name: 'All of October' }).click()
+  // Close button
+  await dialog.getByRole('button', { name: 'Close' }).click()
+  await expect(page).not.toHaveURL(/category=/)
+  await expect(dialog).toBeHidden()
+  await expect(medicalRow(page)).toBeFocused()
+
+  // Escape
+  await medicalRow(page).click()
+  await expect(heading).toBeFocused()
+  await page.keyboard.press('Escape')
   await expect(page).not.toHaveURL(/category=/)
   await expect(medicalRow(page)).toBeFocused()
 
+  // Browser Back
   await medicalRow(page).click()
   await expect(heading).toBeFocused()
   await page.goBack()
+  await expect(dialog).toBeHidden()
   await expect(medicalRow(page)).toBeFocused()
+})
+
+test('a long payment list opens at the top of the dialog', async ({ page }) => {
+  await signInAt(page, '/dashboard')
+  await page.getByRole('link', { name: 'Grocery spending R900 increase' }).click()
+  const heading = page.getByRole('heading', { level: 2, name: 'Grocery spending rose by R900.' })
+  await expect(heading).toBeFocused()
+  await page.waitForFunction(() => document.getAnimations().every((a) => a.playState !== 'running'))
+  const scrolled = await heading.evaluate((el) => el.closest('dialog')!.firstElementChild!.scrollTop)
+  expect(scrolled).toBe(0)
+})
+
+test('the dialog is modal: the page behind is out of reach', async ({ page }) => {
+  await signInAt(page, '/dashboard?month=2026-10&category=medical')
+  const dialog = page.getByRole('dialog', { name: 'Medical spending rose by R1,200.' })
+  await expect(dialog).toBeVisible()
+  // Server-rendered open; it becomes a true modal once the page hydrates.
+  await expect.poll(() => dialog.evaluate((el) => el.matches(':modal'))).toBe(true)
+  // Tabbing never reaches the page behind. (After the last control the browser may move focus to its own UI,
+  // which the page sees as <body>; that is correct modal behaviour.)
+  for (let i = 0; i < 6; i++) {
+    await page.keyboard.press('Tab')
+    const inDialogOrChrome = await page.evaluate(
+      () => document.activeElement === document.body || !!document.activeElement?.closest('dialog'),
+    )
+    expect(inDialogOrChrome).toBe(true)
+  }
 })
 
 test('a bookmarked Medical view survives refresh and the keyboard reaches it', async ({ page }) => {
   await signInAt(page, '/dashboard?month=2026-10&category=medical')
   await page.reload()
-  await expect(page.getByRole('heading', { level: 1, name: 'Medical spending rose by R1,200.' })).toBeVisible()
+  await expect(page.getByRole('dialog', { name: 'Medical spending rose by R1,200.' })).toBeVisible()
 
   await page.goto('/dashboard')
   await medicalRow(page).focus()

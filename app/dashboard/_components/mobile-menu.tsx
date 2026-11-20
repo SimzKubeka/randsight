@@ -2,7 +2,7 @@
 
 import { useRef } from 'react'
 import { Icon } from '@/components/icons.tsx'
-import styles from './shell.module.css'
+import styles from '../shell.module.css'
 
 /** Hamburger for phones and tablets. A native <details>, so it opens without JavaScript; closes on Escape or when a link is chosen. */
 export function MobileMenu({ children }: { children: React.ReactNode }) {

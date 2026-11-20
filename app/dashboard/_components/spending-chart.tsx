@@ -1,7 +1,7 @@
 import { niceTicks } from '@/lib/chart.ts'
 import { formatRand } from '@/lib/money.ts'
 import { monthLabel, monthName } from '@/lib/period.ts'
-import styles from './dashboard.module.css'
+import styles from '../dashboard.module.css'
 
 type Point = { month: string; cents: number }
 
