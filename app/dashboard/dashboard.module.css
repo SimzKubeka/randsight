@@ -1,0 +1,32 @@
+.header {
+  background: var(--rs-accent);
+  color: var(--rs-white);
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 3.5rem;
+}
+
+.brand {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.signOut {
+  min-height: var(--rs-tap);
+  padding-inline: var(--rs-space-4);
+  border: 2px solid var(--rs-white);
+  border-radius: var(--rs-radius);
+  background: transparent;
+  color: var(--rs-white);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.signOut:focus-visible {
+  outline-color: var(--rs-white);
+}

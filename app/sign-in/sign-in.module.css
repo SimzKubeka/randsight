@@ -1,0 +1,125 @@
+.page {
+  max-width: 28rem;
+  padding-block: var(--rs-space-8);
+}
+
+.brand {
+  margin: 0;
+  color: var(--rs-accent);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.notice {
+  padding: var(--rs-space-3) var(--rs-space-4);
+  border: 1px solid var(--rs-blue-600);
+  background: var(--rs-blue-50);
+  border-radius: var(--rs-radius);
+}
+
+.form {
+  display: grid;
+  gap: var(--rs-space-4);
+}
+
+.field {
+  display: grid;
+  gap: var(--rs-space-1);
+}
+
+.field label {
+  font-weight: 600;
+}
+
+.field input {
+  min-height: var(--rs-tap);
+  padding: var(--rs-space-2) var(--rs-space-3);
+  border: 2px solid var(--rs-ink-2);
+  border-radius: var(--rs-radius);
+  font: inherit;
+  background: var(--rs-card);
+  color: var(--rs-text);
+}
+
+.field input[aria-invalid='true'] {
+  border-color: var(--rs-worse);
+}
+
+.error {
+  margin: 0;
+  color: var(--rs-worse);
+  font-weight: 600;
+}
+
+.summary {
+  padding: var(--rs-space-4);
+  border: 3px solid var(--rs-worse);
+  border-radius: var(--rs-radius);
+  background: var(--rs-card);
+}
+
+.summaryTitle {
+  margin: 0 0 var(--rs-space-2);
+  font-size: var(--rs-text-lg);
+}
+
+.summary ul {
+  margin: 0;
+  padding-left: var(--rs-space-4);
+}
+
+.summary a {
+  color: var(--rs-worse);
+  font-weight: 600;
+}
+
+.button {
+  min-height: var(--rs-tap);
+  border: 0;
+  border-radius: var(--rs-radius);
+  background: var(--rs-accent);
+  color: var(--rs-white);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.button:disabled {
+  opacity: 0.7;
+  cursor: progress;
+}
+
+.demo {
+  margin-top: var(--rs-space-8);
+  padding: var(--rs-space-4);
+  border: 1px dashed var(--rs-line);
+  border-radius: var(--rs-radius);
+  background: var(--rs-card);
+}
+
+.demo h2 {
+  margin: 0 0 var(--rs-space-2);
+  font-size: var(--rs-text-md);
+}
+
+.demo p {
+  margin: 0 0 var(--rs-space-2);
+  color: var(--rs-text-muted);
+}
+
+.demo dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--rs-space-1) var(--rs-space-3);
+  margin: 0;
+}
+
+.demo dt {
+  font-weight: 600;
+}
+
+.demo dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+}
