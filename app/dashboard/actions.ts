@@ -2,7 +2,8 @@
 
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { deleteSession, SESSION_COOKIE } from '@/lib/auth.ts'
+import { SESSION_COOKIE } from '@/lib/auth.ts'
+import { deleteSession } from '@/lib/sessions.ts'
 import { getDb } from '@/lib/db.ts'
 
 export async function signOut() {

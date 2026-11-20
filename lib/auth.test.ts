@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto'
 import { describe, expect, it } from 'vitest'
-import { activeCustomerId, checkThrottle, createSession, deleteSession, getSession, recordFailure, safeNext, SESSION_MS } from './auth.ts'
+import { checkThrottle, recordFailure, safeNext } from './auth.ts'
+import { activeCustomerId, createSession, deleteSession, getSession, SESSION_MS } from './sessions.ts'
 import { openDb } from './db.ts'
 import { DEMO, seed } from './seed.ts'
 

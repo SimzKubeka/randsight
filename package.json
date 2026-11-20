@@ -17,7 +17,9 @@
     "test:e2e": "playwright test",
     "db:seed": "node scripts/seed.ts",
     "db:seed-large": "node scripts/seed-large.ts",
-    "screenshots": "node scripts/screenshots.ts"
+    "screenshots": "node scripts/screenshots.ts",
+    "bench": "node scripts/bench.ts",
+    "lighthouse": "node scripts/lighthouse.ts"
   },
   "dependencies": {
     "marked": "18.2.1",
@@ -28,11 +30,14 @@
   "devDependencies": {
     "@axe-core/playwright": "4.14.0",
     "@playwright/test": "1.65.1",
+    "@types/autocannon": "7.12.7",
     "@types/node": "24.19.2",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
+    "autocannon": "8.0.0",
     "eslint": "9.39.5",
     "eslint-config-next": "16.4.6",
+    "lighthouse": "13.6.0",
     "typescript": "6.0.3",
     "vitest": "5.1.1"
   }
