@@ -4,20 +4,28 @@ import { SITE_URL } from '../playwright.config.ts'
 
 const PUBLIC = ['/', '/docs', '/docs/architecture', '/docs/tech-stack', '/docs/verification']
 
-test('the landing page answers with a labelled sample and leads to the dashboard', async ({ page }) => {
+test('the landing page sells the product with a labelled sample and leads to the dashboard', async ({ page, request }) => {
   await page.goto('/')
   await expect(page.getByRole('heading', { level: 1, name: 'Your money, in hindsight.' })).toBeVisible()
   await expect(page.getByText('See what changed from one month to the next, down to the payments that made the difference.').first()).toBeVisible()
-  await expect(page.getByText('Sample insight')).toBeVisible()
+  await expect(page.getByText(/^Sample insight/)).toBeVisible()
+  await expect(page.getByRole('heading', { level: 2, name: /where did it go/ })).toBeAttached()
+  await expect(page.getByRole('link', { name: 'Take me to my dashboard' })).toBeAttached()
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
 
-  await page.getByRole('link', { name: 'Take me to my dashboard' }).click()
+  // Screenshots go through the image optimiser, not straight from /public.
+  const hero = page.getByRole('img', { name: /RandSight dashboard for October 2026/ })
+  const src = (await hero.getAttribute('src'))!
+  expect(src).toContain('/_next/image')
+  expect((await request.get(src)).ok()).toBe(true)
+
+  await page.getByRole('link', { name: 'Get started free' }).click()
   await expect(page).toHaveURL(/\/sign-in\?next=%2Fdashboard/)
 })
 
 test('the docs render the repository Markdown with working links and diagram', async ({ page, request }) => {
   await page.goto('/')
-  await page.getByRole('main').getByRole('link', { name: "How it's built" }).click()
+  await page.getByRole('navigation', { name: 'Site' }).getByRole('link', { name: 'Docs' }).click()
   await expect(page).toHaveURL('/docs')
   await page.getByRole('link', { name: 'Architecture' }).first().click()
   await expect(page.getByRole('heading', { level: 1, name: 'Architecture' })).toBeVisible()
