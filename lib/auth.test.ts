@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto'
 import { describe, expect, it } from 'vitest'
-import { checkThrottle, createSession, deleteSession, getSession, recordFailure, safeNext, SESSION_MS } from './auth.ts'
+import { activeCustomerId, checkThrottle, createSession, deleteSession, getSession, recordFailure, safeNext, SESSION_MS } from './auth.ts'
 import { openDb } from './db.ts'
 import { DEMO, seed } from './seed.ts'
 
@@ -33,6 +33,13 @@ describe('sessions', () => {
     const { token } = createSession(db, demo, now)
     deleteSession(db, token)
     expect(getSession(db, token, now)).toBeNull()
+  })
+
+  it('reads the customer for display without deleting an expired session', () => {
+    const { token } = createSession(db, demo, now)
+    expect(activeCustomerId(db, token, now)).toBe(demo)
+    expect(activeCustomerId(db, token, now + SESSION_MS)).toBeNull()
+    expect(getSession(db, token, now + SESSION_MS)).toEqual({ status: 'expired' })
   })
 
   it('issues a different token every time', () => {
