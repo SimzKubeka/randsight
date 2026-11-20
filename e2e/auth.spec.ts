@@ -67,6 +67,7 @@ test('an expired session returns to sign-in with a message, then back to the pag
 test('sign-out ends the session', async ({ page }) => {
   await page.goto('/sign-in')
   await signIn(page)
+  await page.getByText('Menu').click()
   await page.getByRole('button', { name: 'Sign out' }).click()
   await expect(page).toHaveURL('/sign-in?signed-out=1')
   await expect(page.getByText('You have signed out.')).toBeVisible()
