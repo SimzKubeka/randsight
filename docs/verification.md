@@ -13,6 +13,16 @@ npm run test:e2e     # browser tests (Playwright) against a production build on 
 
 The browser tests build the app, start the same standalone server Docker runs, and use their own database file. They run every test twice: at phone size (360 × 740) and desktop size (1280 × 800).
 
+Setting `BASE_URL` points the browser tests at a server that is already running instead. CI uses this to sign in and use the dashboard against the Docker image, so the container's own seeded database is tested, not just the build.
+
+## Continuous integration
+
+GitHub Actions runs three jobs on every pull request and every push to `main`:
+
+1. Type check, lint and unit tests.
+2. Production build and every browser test.
+3. Docker build, then the dashboard browser tests against the running container.
+
 ## What is covered
 
 ### Financial correctness
@@ -53,7 +63,9 @@ Run on 20 November 2026 (Windows 11, Node 24.18).
 | Type check | Pass |
 | Lint | Pass, 0 problems |
 | Unit tests | 73 passed |
-| Browser tests | 44 passed |
+| Browser tests | 48 passed |
+| Docker image, built from a clean clone | Built in 58 s, 392 MB |
+| Dashboard browser tests against the container | 14 passed |
 
 ## Still to record
 
