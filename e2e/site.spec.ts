@@ -75,20 +75,30 @@ test('public pages have no accessibility violations', async ({ page }) => {
   for (const path of PUBLIC) {
     await page.goto(path)
     await expect(page).toHaveTitle(/RandSight/)
+    // Let the load sequence finish: mid-fade text has a lower contrast than its resting colour.
+    await page.waitForFunction(() =>
+      document.getAnimations().every((a) => a.playState !== 'running' || !(a.timeline instanceof DocumentTimeline) || a.effect?.getComputedTiming().iterations === Infinity),
+    )
     expect((await new AxeBuilder({ page }).analyze()).violations, path).toEqual([])
   }
 })
 
-test('the feature carousel moves with its buttons and stays keyboard-reachable', async ({ page }) => {
+test('the feature strip loops, pauses on request and hides its duplicate from screen readers', async ({ page }) => {
   await page.goto('/')
-  const previous = page.getByRole('button', { name: 'Previous feature' })
-  const next = page.getByRole('button', { name: 'Next feature' })
-  const rail = page.getByRole('group', { name: /Features, scroll sideways/ })
-  await rail.scrollIntoViewIfNeeded()
-  await expect(previous).toBeDisabled()
-  await next.click()
-  await expect(previous).toBeEnabled()
-  expect(await rail.evaluate((el) => el.scrollLeft)).toBeGreaterThan(0)
-  await rail.focus()
-  await expect(rail).toBeFocused()
+  const features = page.getByRole('list', { name: 'Features' })
+  await features.scrollIntoViewIfNeeded()
+  await expect(features.getByRole('listitem')).toHaveCount(4)
+  await expect(page.locator('ul[aria-hidden="true"] li')).toHaveCount(4)
+
+  const offset = () => features.evaluate((el) => new DOMMatrix(getComputedStyle(el).transform).m41)
+  const before = await offset()
+  await page.waitForTimeout(400)
+  expect(await offset()).toBeLessThan(before)
+
+  await page.getByRole('button', { name: /^Pause/ }).click()
+  await expect(page.getByRole('button', { name: /^Play/ })).toBeVisible()
+  await page.mouse.move(0, 0) // hovering also pauses; make sure only the button is holding it
+  const held = await offset()
+  await page.waitForTimeout(400)
+  expect(await offset()).toBe(held)
 })
