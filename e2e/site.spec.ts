@@ -102,3 +102,13 @@ test('the feature strip loops, pauses on hover and hides its duplicate from scre
   await page.waitForTimeout(400)
   expect(await offset()).toBe(held)
 })
+
+test('an unknown address explains itself and offers a way back', async ({ page }) => {
+  const res = await page.goto('/no-such-page')
+  expect(res?.status()).toBe(404)
+  await expect(page).toHaveTitle('Page not found · RandSight')
+  await expect(page.getByRole('heading', { level: 1, name: 'We couldn’t find that page' })).toBeVisible()
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([])
+  await page.getByRole('link', { name: 'RandSight home' }).click()
+  await expect(page).toHaveURL('/')
+})

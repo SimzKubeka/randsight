@@ -37,9 +37,12 @@ test('October answers the question before any chart', async ({ page }) => {
 
 test('Medical opens its payments in a dialog and every way out returns to the same row', async ({ page }) => {
   await signInAt(page, '/dashboard')
+  await expect(page).toHaveTitle('Monthly review · RandSight')
   await medicalRow(page).click()
 
   await expect(page).toHaveURL(/month=2026-10&category=medical/)
+  // The tab names the view, never an amount.
+  await expect(page).toHaveTitle('Medical spending · Monthly review · RandSight')
   const dialog = page.getByRole('dialog', { name: 'Medical spending rose by R1,200.' })
   await expect(dialog).toBeVisible()
   const heading = dialog.getByRole('heading', { level: 2, name: 'Medical spending rose by R1,200.' })

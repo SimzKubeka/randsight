@@ -14,7 +14,8 @@ import { NavLinks } from './_components/nav-links.tsx'
 import styles from './shell.module.css'
 
 export const metadata: Metadata = {
-  title: 'Dashboard',
+  // A plain string here would drop the root template for every page below the dashboard.
+  title: { default: 'Dashboard · RandSight', template: '%s · RandSight' },
   robots: { index: false, follow: false },
 }
 

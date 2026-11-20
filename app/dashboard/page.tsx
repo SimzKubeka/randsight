@@ -16,6 +16,12 @@ import { SpendingChart } from './_components/spending-chart.tsx'
 
 type Props = { searchParams: Promise<Record<string, string | string[] | undefined>> }
 
+// Names the view, never an amount: titles show in tabs, history and screen-sharing.
+export async function generateMetadata({ searchParams }: Props) {
+  const { category } = await searchParams
+  return { title: isCategory(category) ? `${rowLabel(category)} · Monthly review` : 'Monthly review' }
+}
+
 const arrow = (cents: number) => (cents > 0 ? '↑' : '↓')
 
 function ChangeLine({ cents, prev }: { cents: number; prev: string }) {

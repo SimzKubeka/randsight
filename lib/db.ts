@@ -56,7 +56,8 @@ export function openDb(path: string): DatabaseSync {
   return db
 }
 
-export const databasePath = process.env.DATABASE_PATH ?? 'data/randsight.db'
+// Serverless hosts (Vercel) can only write to /tmp. That copy is per instance, so it suits a demo, not real data.
+export const databasePath = process.env.DATABASE_PATH ?? (process.env.VERCEL ? '/tmp/randsight.db' : 'data/randsight.db')
 
 let shared: DatabaseSync | undefined
 
