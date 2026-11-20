@@ -62,10 +62,10 @@ export default async function DashboardLayout({ children }: { children: React.Re
           </Link>
           <p className={styles.today}>Demo date · {today}</p>
           <div className={styles.actions}>
-            <a href="/docs" className={styles.iconButton} title="Docs">
+            <Link href="/docs" className={styles.iconButton} title="Docs">
               <Icon name="docs" />
               <span className="sr-only">Docs</span>
-            </a>
+            </Link>
             {name && (
               <span className={styles.account}>
                 <span className={styles.avatar} aria-hidden="true">
@@ -84,7 +84,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
         <footer className={styles.footer}>
           <p>© 2026 RandSight · A demonstration with fictional customers and merchants.</p>
-          <a href="/docs">How it&apos;s built</a>
+          <Link href="/docs">How it&apos;s built</Link>
         </footer>
       </div>
     </div>
