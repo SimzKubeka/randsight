@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { Icon } from '@/components/icons.tsx'
 import { monthLabel } from '@/lib/period.ts'
 import styles from './dashboard.module.css'
 
@@ -8,6 +9,7 @@ export function MonthPicker({ months, month, category }: { months: string[]; mon
     // Keyed by month so the list closes after choosing.
     <details className={styles.picker} key={month}>
       <summary>
+        <Icon name="calendar" />
         <span className="sr-only">Month: </span>
         <span>{monthLabel(month)}</span>
         <span aria-hidden="true" className={styles.caret}>

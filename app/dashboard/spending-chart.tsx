@@ -29,7 +29,12 @@ export function SpendingChart({ points, selected }: { points: Point[]; selected:
 
   return (
     <section className={styles.chart} aria-labelledby="spending-title">
-      <h2 id="spending-title">Monthly spending</h2>
+      <div className={styles.sectionHead}>
+        <h2 id="spending-title">Monthly spending</h2>
+        <span className={styles.meta}>
+          {shortMonth.format(new Date(`${points[0]!.month}-01T00:00:00Z`))} – {shortMonth.format(new Date(`${current.month}-01T00:00:00Z`))}
+        </span>
+      </div>
       <p id="spending-summary" className={styles.muted}>
         {summarise(points, index)}
       </p>

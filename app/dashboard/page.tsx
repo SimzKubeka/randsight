@@ -5,7 +5,7 @@ import { getMonths, getTotals, getTransactions } from '@/lib/data.ts'
 import { getDb } from '@/lib/db.ts'
 import { describeChange, explainChange, monthTotals, type Driver } from '@/lib/insights.ts'
 import { formatRand } from '@/lib/money.ts'
-import { DEMO_NOW, monthName, monthOf, shiftMonth } from '@/lib/period.ts'
+import { DEMO_NOW, monthLabel, monthName, monthOf, shiftMonth } from '@/lib/period.ts'
 import { CategoryDetail } from './category-detail.tsx'
 import styles from './dashboard.module.css'
 import { FocusReturn } from './focus-return.tsx'
@@ -15,6 +15,19 @@ import { SpendingChart } from './spending-chart.tsx'
 type Props = { searchParams: Promise<Record<string, string | string[] | undefined>> }
 
 const arrow = (cents: number) => (cents > 0 ? '↑' : '↓')
+
+function ChangeLine({ cents, prev }: { cents: number; prev: string }) {
+  if (cents === 0) return <p className={styles.statChange}>Same as {prev}</p>
+  return (
+    <p className={styles.statChange}>
+      <span className={`${styles.changeValue} amount`}>
+        <span aria-hidden="true">{arrow(cents)} </span>
+        {formatRand(Math.abs(cents))} {cents < 0 ? 'less' : 'more'}
+      </span>{' '}
+      than {prev}
+    </p>
+  )
+}
 
 export default async function DashboardPage({ searchParams }: Props) {
   const params = await searchParams
@@ -26,8 +39,8 @@ export default async function DashboardPage({ searchParams }: Props) {
   const months = getMonths(db, customerId, monthOf(DEMO_NOW))
   if (!months[0]) {
     return (
-      <main className={`container ${styles.page}`}>
-        <div className="surface">
+      <main className={styles.page}>
+        <div>
           <h1 className={styles.title}>Monthly review</h1>
           <p>No payments recorded yet.</p>
         </div>
@@ -59,47 +72,47 @@ export default async function DashboardPage({ searchParams }: Props) {
   const detail = category && getTransactions(db, customerId, month, category, Number(params.page) || 1)
 
   return (
-    <main className={`container ${styles.page}`}>
+    <main className={styles.page}>
       <FocusReturn key={`${month}|${category}|${detail ? detail.page : 0}`} />
-      <div className={`surface ${styles.review}`} data-detail={category ? '' : undefined}>
-        <div className={styles.titleRow}>
-          {category ? <p className={styles.title}>Monthly review</p> : <h1 className={styles.title}>Monthly review</h1>}
+      <div className={styles.review} data-detail={category ? '' : undefined}>
+        <header className={styles.pageHead}>
+          <div>
+            <p className={styles.eyebrow}>
+              {monthLabel(month)} · Completed month · {months.length} months of records
+            </p>
+            {category ? <p className={styles.title}>Monthly review</p> : <h1 className={styles.title}>Monthly review</h1>}
+            <p className={styles.subtitle}>What changed from one month to the next, down to the payments that made the difference.</p>
+          </div>
           <MonthPicker months={months} month={month} category={category} />
-        </div>
+        </header>
 
         <div className={styles.overview}>
-          <div className={styles.result}>
-            <p className={styles.figureBlock}>
-              <span className={`${styles.figure} amount`}>{formatRand(curr.leftOverCents)}</span>
-              <span className={styles.figureLabel}>Left after spending</span>
-            </p>
-            {change && (
-              <p className={styles.change}>
-                {change.leftOverChangeCents === 0 ? (
-                  <span className={styles.changeAmount}>The same</span>
-                ) : (
-                  <span className={`${styles.changeAmount} amount`}>
-                    <span aria-hidden="true">{arrow(change.leftOverChangeCents)} </span>
-                    {formatRand(Math.abs(change.leftOverChangeCents))} {change.leftOverChangeCents < 0 ? 'less' : 'more'}
-                  </span>
-                )}
-                <span className={styles.changeText}>
-                  {change.leftOverChangeCents === 0 ? 'as' : 'than'} {monthName(prev.month)}
-                </span>
-              </p>
-            )}
+          <p className={styles.lead}>{copy ? `${copy.headline} ${copy.causes}` : 'There is no earlier month to compare with.'}</p>
+
+          <div className={styles.stats}>
+            <div className={styles.statMain}>
+              <p className={`${styles.figure} amount`}>{formatRand(curr.leftOverCents)}</p>
+              <p className={styles.statLabel}>Left after spending</p>
+              {change && <ChangeLine cents={change.leftOverChangeCents} prev={monthName(prev.month)} />}
+            </div>
+            <div>
+              <p className={`${styles.statFigure} amount`}>{formatRand(curr.inCents)}</p>
+              <p className={styles.statLabel}>Money in</p>
+              {change && <ChangeLine cents={change.inChangeCents} prev={monthName(prev.month)} />}
+            </div>
+            <div>
+              <p className={`${styles.statFigure} amount`}>{formatRand(curr.outCents)}</p>
+              <p className={styles.statLabel}>Money out</p>
+              {change && <ChangeLine cents={change.outChangeCents} prev={monthName(prev.month)} />}
+            </div>
           </div>
 
           <div className={styles.middle}>
             <section aria-labelledby="what-changed">
-              <h2 id="what-changed">What changed</h2>
-              {copy ? (
-                <p className={styles.muted}>
-                  {copy.headline} {copy.causes}
-                </p>
-              ) : (
-                <p className={styles.muted}>There is no earlier month to compare with.</p>
-              )}
+              <div className={styles.sectionHead}>
+                <h2 id="what-changed">What changed</h2>
+                {change && <span className={styles.meta}>vs {monthName(prev.month)}</span>}
+              </div>
               {drivers.length > 0 && (
                 <ul aria-labelledby="what-changed" className={styles.rows}>
                   {drivers.map((d) => (
@@ -132,7 +145,10 @@ export default async function DashboardPage({ searchParams }: Props) {
 
         <div className={styles.bottom}>
           <section aria-labelledby="all-categories" className={styles.categories}>
-            <h2 id="all-categories">All categories</h2>
+            <div className={styles.sectionHead}>
+              <h2 id="all-categories">All categories</h2>
+              <span className={styles.meta}>{categories.length} categories</span>
+            </div>
             <ul aria-labelledby="all-categories" className={styles.rows}>
               {categories.map((key) => {
                 const diff = (curr.byCategory[key] ?? 0) - (prev.byCategory[key] ?? 0)
@@ -174,9 +190,7 @@ export default async function DashboardPage({ searchParams }: Props) {
               count={detail.count}
               page={detail.page}
             />
-          ) : (
-            <p className={styles.detailHint}>Choose a category to see its payments.</p>
-          )}
+          ) : null}
         </div>
       </div>
     </main>
