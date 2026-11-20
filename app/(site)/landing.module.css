@@ -1,36 +1,31 @@
+/*
+ * Landing page. Motion thesis, "falling into hindsight": the product settles into view as you scroll back
+ * through it. Every effect has a static resting state, so browsers without scroll-driven animations, and
+ * anyone who prefers reduced motion, see the finished composition.
+ */
+
+.page {
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  /* vw, not %: the same value must work as section padding and as the rail's negative margin. */
+  --bleed: max(var(--rs-gutter), calc((100vw - var(--rs-max)) / 2));
+}
+
 /* ---------- shared ---------- */
 
-.eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--rs-space-2);
-  margin: 0 0 var(--rs-space-3);
-  color: var(--rs-blue);
-  font-size: var(--rs-text-sm);
-  font-weight: var(--rs-weight-semibold);
-}
-
-.eyebrow::before {
-  content: '';
-  width: 0.5rem;
-  height: 0.5rem;
-  border-radius: 50%;
-  background: currentColor;
-}
-
 .heading {
-  max-width: 24ch;
+  max-width: 22ch;
   margin: 0;
   font-family: var(--rs-font-serif);
-  font-size: clamp(1.75rem, 1.3rem + 2vw, 2.75rem);
+  font-size: clamp(1.875rem, 1.3rem + 2.2vw, 3rem);
   font-weight: var(--rs-weight-semibold);
-  line-height: 1.15;
-  letter-spacing: -0.01em;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
 }
 
 .body {
   max-width: 52ch;
-  margin: var(--rs-space-4) 0 0;
+  margin: var(--rs-space-5) 0 0;
   color: var(--rs-ink-2);
   font-size: var(--rs-text-lg);
 }
@@ -54,21 +49,36 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: var(--rs-space-2);
   min-height: 3rem;
   padding-inline: var(--rs-space-6);
   border-radius: var(--rs-radius-sm);
   font-weight: var(--rs-weight-semibold);
   text-decoration: none;
+  transition:
+    background-color 160ms ease-out,
+    box-shadow 200ms ease-out;
 }
 
 .primary {
   background: var(--rs-action);
+  box-shadow: 0 1px 2px rgb(17 20 24 / 0.12);
   color: var(--rs-surface);
 }
 
 .primary:hover {
   background: var(--rs-blue-strong);
+  box-shadow: 0 8px 20px rgb(31 95 204 / 0.28);
   color: var(--rs-surface);
+}
+
+.arrow {
+  transition: transform 200ms var(--ease-out);
+}
+
+.primary:hover .arrow,
+.primary:focus-visible .arrow {
+  transform: translateX(4px);
 }
 
 .secondary {
@@ -83,50 +93,55 @@
 }
 
 .section {
-  padding: var(--rs-space-12) var(--rs-gutter);
-}
-
-.section > * {
-  max-width: var(--rs-max);
-  margin-inline: auto;
-}
-
-.section > .eyebrow {
-  display: flex;
+  padding: var(--rs-space-12) var(--bleed);
 }
 
 .tinted {
+  overflow-x: clip;
   background: var(--rs-canvas);
 }
 
 /* ---------- hero ---------- */
 
 .hero {
+  overflow-x: clip;
   padding: var(--rs-space-12) var(--rs-gutter) 0;
-  background: linear-gradient(var(--rs-surface) 55%, var(--rs-canvas) 55%);
+  background: linear-gradient(var(--rs-surface) 52%, var(--rs-canvas) 52%);
   text-align: center;
 }
 
 .heroText {
-  max-width: 46rem;
+  max-width: 48rem;
   margin-inline: auto;
 }
 
 .title {
   margin: 0;
   font-family: var(--rs-font-serif);
-  font-size: clamp(2.75rem, 1.8rem + 4.5vw, 5rem);
+  font-size: clamp(2.875rem, 1.8rem + 5vw, 5.5rem);
   font-weight: var(--rs-weight-semibold);
-  line-height: 1.02;
-  letter-spacing: -0.025em;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+/* Each line is a mask; the words rise through it on load. */
+.line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+}
+
+.line > span {
+  display: inline-block;
 }
 
 .lead {
   max-width: 36ch;
-  margin: var(--rs-space-5) auto 0;
+  margin: var(--rs-space-6) auto 0;
   color: var(--rs-ink-2);
   font-size: clamp(1.125rem, 1rem + 0.6vw, 1.375rem);
   line-height: 1.45;
+  text-wrap: balance;
 }
 
 .showcase {
@@ -134,14 +149,21 @@
   max-width: 70rem;
   margin: var(--rs-space-12) auto 0;
   padding-bottom: var(--rs-space-12);
+  perspective: 1600px;
+}
+
+.tilt {
+  transform-origin: 50% 0;
 }
 
 .browser {
   overflow: hidden;
   border: 1px solid var(--rs-rule-strong);
-  border-radius: var(--rs-radius);
+  border-radius: 0.75rem;
   background: var(--rs-surface);
-  box-shadow: 0 24px 60px rgb(17 20 24 / 0.14);
+  box-shadow:
+    0 2px 6px rgb(17 20 24 / 0.06),
+    0 32px 80px -16px rgb(17 20 24 / 0.22);
 }
 
 .browserBar {
@@ -171,7 +193,9 @@
   border: 6px solid var(--rs-ink);
   border-radius: 1.75rem;
   background: var(--rs-ink);
-  box-shadow: 0 24px 60px rgb(17 20 24 / 0.22);
+  box-shadow:
+    0 4px 10px rgb(17 20 24 / 0.12),
+    0 36px 72px -12px rgb(17 20 24 / 0.38);
 }
 
 .heroPhone {
@@ -181,6 +205,16 @@
   width: 21%;
   max-width: 14rem;
   height: 54%;
+}
+
+.drop {
+  height: 100%;
+  transform: rotate(-3deg);
+  transform-origin: 50% 100%;
+}
+
+.heroPhone .phone {
+  height: 100%;
   border-width: 4px;
   border-radius: 1.25rem;
 }
@@ -192,73 +226,192 @@
 }
 
 .caption {
-  margin-top: var(--rs-space-4);
+  margin-top: var(--rs-space-5);
   color: var(--rs-ink-2);
   font-size: var(--rs-text-sm);
   font-weight: var(--rs-weight-semibold);
 }
 
-/* ---------- steps ---------- */
+/* ---------- steps: a thin timeline ---------- */
 
 .steps {
   display: grid;
-  gap: var(--rs-space-8);
-  margin-top: var(--rs-space-10);
+  gap: var(--rs-space-6);
+  margin: var(--rs-space-10) 0 0;
   padding: 0;
   list-style: none;
+  view-timeline-name: --steps;
 }
 
-.steps h3,
-.features h3 {
-  margin: var(--rs-space-4) 0 var(--rs-space-2);
+.steps li {
+  position: relative;
+  display: flex;
+  gap: var(--rs-space-4);
+  padding-top: var(--rs-space-5);
+}
+
+/* The rule above each step; the blue fill runs along it as the steps scroll into view. */
+.steps li::before,
+.steps li::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--rs-rule);
+}
+
+.steps li::after {
+  background: var(--rs-blue);
+  transform-origin: 0 50%;
+}
+
+.steps h3 {
+  margin: 0;
   font-size: var(--rs-text-lg);
 }
 
-.steps p,
-.features p {
-  margin: 0;
+.steps p {
+  margin: var(--rs-space-1) 0 0;
   color: var(--rs-ink-2);
 }
 
 .stepNumber {
   display: inline-grid;
+  flex-shrink: 0;
   place-items: center;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2rem;
+  height: 2rem;
   border-radius: 50%;
   background: var(--rs-blue-50);
   color: var(--rs-blue);
+  font-size: var(--rs-text-sm);
   font-weight: var(--rs-weight-bold);
 }
 
-/* ---------- features ---------- */
+/* ---------- features carousel ---------- */
 
-.features {
-  display: grid;
-  gap: var(--rs-space-4);
-  margin-top: var(--rs-space-10);
-  padding: 0;
-  list-style: none;
+.carousel {
+  margin-top: var(--rs-space-8);
 }
 
-.features li {
-  padding: var(--rs-space-6);
-  border: 1px solid var(--rs-rule);
-  border-radius: var(--rs-radius);
-  background: var(--rs-surface);
+.carouselControls {
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-2);
+  margin-bottom: var(--rs-space-5);
 }
 
-.featureIcon {
+.progress {
+  flex: 1;
+  height: 2px;
+  margin-right: var(--rs-space-4);
+  overflow: hidden;
+  border-radius: 2px;
+  background: var(--rs-rule);
+}
+
+.progress span {
+  display: block;
+  height: 100%;
+  background: var(--rs-blue);
+  transform-origin: 0 50%;
+  transition: transform 200ms ease-out;
+}
+
+.navButton {
   display: inline-grid;
   place-items: center;
-  width: 2.75rem;
-  height: 2.75rem;
-  border-radius: var(--rs-radius-sm);
+  width: var(--rs-tap);
+  height: var(--rs-tap);
+  border: 1px solid var(--rs-rule-strong);
+  border-radius: 50%;
+  background: var(--rs-surface);
+  color: var(--rs-ink);
+  cursor: pointer;
+  transition:
+    background-color 150ms ease-out,
+    opacity 150ms ease-out;
+}
+
+.navButton:hover:not(:disabled) {
   background: var(--rs-blue-50);
   color: var(--rs-blue);
 }
 
-/* ---------- split ---------- */
+.navButton:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* Full-bleed rail: the first slide lines up with the content, later slides run off the edge. */
+.rail {
+  display: grid;
+  grid-auto-columns: clamp(16rem, 78vw, 24rem);
+  grid-auto-flow: column;
+  column-gap: var(--rs-space-4);
+  margin: 0 calc(-1 * var(--bleed));
+  padding: var(--rs-space-2) var(--bleed) var(--rs-space-6);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-padding-inline: var(--bleed);
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  list-style: none;
+}
+
+.rail::-webkit-scrollbar {
+  display: none;
+}
+
+.rail:focus-visible {
+  outline-offset: -3px;
+}
+
+.slide {
+  display: flex;
+  scroll-snap-align: start;
+}
+
+.card {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 17rem;
+  padding: var(--rs-space-8) var(--rs-space-6) var(--rs-space-6);
+  border-radius: 1rem;
+  background: var(--rs-surface);
+  box-shadow:
+    0 1px 2px rgb(17 20 24 / 0.06),
+    0 12px 32px -12px rgb(17 20 24 / 0.14);
+}
+
+.slideIcon {
+  display: inline-grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.75rem;
+  background: var(--rs-blue-50);
+  color: var(--rs-blue);
+}
+
+.card h3 {
+  margin: auto 0 var(--rs-space-2);
+  padding-top: var(--rs-space-8);
+  font-family: var(--rs-font-serif);
+  font-size: var(--rs-text-xl);
+  font-weight: var(--rs-weight-semibold);
+}
+
+.card p {
+  margin: 0;
+  color: var(--rs-ink-2);
+}
+
+/* ---------- every rand accounted for ---------- */
 
 .split {
   display: grid;
@@ -266,14 +419,15 @@
   align-items: center;
 }
 
-.split > .phone {
+.splitPhone {
   width: min(100%, 20rem);
+  justify-self: center;
 }
 
 .checks {
   display: grid;
-  gap: var(--rs-space-3);
-  margin: var(--rs-space-6) 0 0;
+  gap: var(--rs-space-4);
+  margin: var(--rs-space-8) 0 0;
   padding: 0;
   list-style: none;
 }
@@ -290,10 +444,17 @@
   color: var(--rs-blue);
 }
 
+.checks path {
+  stroke-dasharray: 24;
+}
+
 /* ---------- closing ---------- */
 
 .closing {
-  padding: var(--rs-space-12) var(--rs-gutter);
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  padding: calc(var(--rs-space-12) * 1.5) var(--rs-gutter);
   background: var(--rs-ink);
   color: var(--rs-surface);
   text-align: center;
@@ -312,55 +473,232 @@
 .closing .small {
   margin: var(--rs-space-5) 0 0;
   color: var(--rs-rule-strong);
+  font-size: var(--rs-text-sm);
 }
 
 .closing .primary:focus-visible {
   outline-color: var(--rs-surface);
 }
 
-/* ---------- breakpoints ---------- */
+/* The brand mark, oversized and faint, behind the call to action. */
+.mark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: -1;
+  width: min(70vw, 38rem);
+  fill: var(--rs-vermilion);
+  opacity: 0.09;
+  transform: translate(-50%, -50%);
+}
 
-/* Phones: the overlapping phone would cover the sample caption; the payments section shows it full size. */
+/* ---------- layout breakpoints ---------- */
+
 @media (max-width: 39.99rem) {
+  /* The overlapping phone would cover the caption; the payments section shows it full size. */
   .heroPhone {
     display: none;
   }
 }
 
-@media (min-width: 40rem) {
+@media (min-width: 48rem) {
   .steps {
     grid-template-columns: repeat(3, 1fr);
-  }
-
-  .features {
-    grid-template-columns: repeat(2, 1fr);
+    gap: var(--rs-space-8);
   }
 }
 
 @media (min-width: 64rem) {
-  .hero {
-    padding-top: var(--rs-space-12);
-  }
-
   .section {
     padding-block: calc(var(--rs-space-12) * 2);
-  }
-
-  .features {
-    grid-template-columns: repeat(4, 1fr);
   }
 
   .split {
     grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
   }
 
-  .split > .phone {
-    justify-self: center;
+  .card {
+    min-height: 19rem;
   }
 }
 
+/* ---------- motion: load sequence ---------- */
+
 @media (prefers-reduced-motion: no-preference) {
-  html:has(.hero) {
+  html:has(.page) {
     scroll-behavior: smooth;
+  }
+
+  .line > span {
+    animation: rise 900ms var(--ease-out) both;
+  }
+
+  .line + .line > span {
+    animation-delay: 90ms;
+  }
+
+  .enter {
+    animation: fade-up 700ms var(--ease-out) both;
+    animation-delay: 260ms;
+  }
+
+  .actions.enter {
+    animation-delay: 340ms;
+  }
+
+  .small.enter {
+    animation-delay: 420ms;
+  }
+
+  .browser {
+    animation: fade-up 900ms var(--ease-out) 300ms both;
+  }
+
+  /* The phone falls into place and settles at its resting angle. */
+  .drop {
+    animation: drop 1100ms var(--ease-out) 650ms both;
+  }
+}
+
+@keyframes rise {
+  from {
+    transform: translateY(105%);
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+}
+
+@keyframes drop {
+  from {
+    opacity: 0;
+    transform: translateY(-85%) rotate(-14deg);
+  }
+
+  35% {
+    opacity: 1;
+  }
+}
+
+/* ---------- motion: scroll-driven (compositor, no JavaScript) ---------- */
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    /* The screenshot starts tilted back and lies flat as you scroll into the page. */
+    .tilt {
+      animation: flatten linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 75vh;
+    }
+
+    /* The phone drifts up faster than the screen behind it. */
+    .heroPhone {
+      animation: drift linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 100vh;
+    }
+
+    /* Each step's rule fills in turn, like progress through the three steps. */
+    .steps li::after {
+      animation: fill linear both;
+      animation-timeline: --steps;
+    }
+
+    .steps li:nth-child(1)::after {
+      animation-range: entry 60% cover 40%;
+    }
+
+    .steps li:nth-child(2)::after {
+      animation-range: cover 40% cover 52%;
+    }
+
+    .steps li:nth-child(3)::after {
+      animation-range: cover 52% cover 64%;
+    }
+
+    /* Slides come forward as they reach the centre of the rail. */
+    .card {
+      animation: focus-slide linear both;
+      animation-timeline: view(inline);
+    }
+
+    .splitPhone {
+      animation: settle linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 45%;
+    }
+
+    .checks path {
+      animation: draw linear both;
+      animation-timeline: view();
+      animation-range: entry 30% cover 35%;
+    }
+
+    .mark {
+      animation: slide-mark linear both;
+      animation-timeline: view();
+    }
+  }
+}
+
+@keyframes flatten {
+  from {
+    transform: rotateX(16deg) scale(0.93);
+  }
+}
+
+@keyframes drift {
+  to {
+    transform: translateY(-120px) rotate(4deg);
+  }
+}
+
+@keyframes fill {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes focus-slide {
+  0% {
+    opacity: 0.55;
+    transform: scale(0.92);
+  }
+
+  30%,
+  70% {
+    opacity: 1;
+    transform: none;
+  }
+
+  100% {
+    opacity: 0.55;
+    transform: scale(0.92);
+  }
+}
+
+@keyframes settle {
+  from {
+    transform: translateY(90px) rotate(5deg);
+  }
+}
+
+@keyframes draw {
+  from {
+    stroke-dashoffset: 24;
+  }
+}
+
+@keyframes slide-mark {
+  from {
+    transform: translate(-62%, -50%) rotate(-4deg);
+  }
+
+  to {
+    transform: translate(-38%, -50%) rotate(4deg);
   }
 }
