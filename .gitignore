@@ -1,0 +1,32 @@
+# AI working files (kept local, not part of the submission)
+/ai-docs/
+/CLAUDE.md
+/AGENTS.md
+/.claude/
+
+# dependencies
+/node_modules
+
+# Next.js
+/.next/
+/out/
+next-env.d.ts
+*.tsbuildinfo
+
+# data
+/data/*.db
+/data/*.db-*
+
+# env
+.env*
+!.env.example
+
+# test and benchmark output
+/test-results/
+/playwright-report/
+/coverage/
+/bench/out/
+
+# os
+.DS_Store
+Thumbs.db
