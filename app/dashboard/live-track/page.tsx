@@ -6,7 +6,7 @@ export const metadata = { title: 'Live Track' }
 export default async function LiveTrackPage() {
   await requireSession('/dashboard/live-track')
   return (
-    <main className={styles.page}>
+    <main id="main" className={styles.page}>
       <header className={styles.pageHead}>
         <div>
           <h1 className={styles.title}>Live Track</h1>

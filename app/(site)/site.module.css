@@ -56,6 +56,30 @@
   background: var(--rs-blue-50);
 }
 
+/* Smallest phones: the theme toggle, Docs and Sign in share the row with the wordmark. */
+@media (max-width: 23.99rem) {
+  .header {
+    gap: var(--rs-space-2);
+  }
+
+  .home > span {
+    font-size: 1.2rem;
+  }
+
+  .nav {
+    gap: var(--rs-space-1);
+  }
+
+  .nav a {
+    padding-inline: var(--rs-space-2);
+    white-space: nowrap;
+  }
+
+  .nav button {
+    width: 2.5rem;
+  }
+}
+
 /* The header gains its rule once the page has scrolled. */
 @supports (animation-timeline: scroll()) {
   .header {

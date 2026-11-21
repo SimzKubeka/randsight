@@ -186,6 +186,17 @@
   border-top: 1px solid var(--rs-rule);
 }
 
+/* Phone menu: the theme switch on its own labelled row. */
+.menuTheme {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(--rs-space-4);
+  padding-top: var(--rs-space-3);
+  border-top: 1px solid var(--rs-rule);
+  font-weight: var(--rs-weight-semibold);
+}
+
 /* ---------- footer ---------- */
 
 .footer {

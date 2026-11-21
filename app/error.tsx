@@ -17,7 +17,7 @@ export default function AppError({ reset }: { error: Error; reset: () => void })
     })
 
   return (
-    <main className={`container ${styles.page}`}>
+    <main id="main" className={`container ${styles.page}`}>
       <Link href="/" className={styles.home}>
         <Wordmark />
       </Link>

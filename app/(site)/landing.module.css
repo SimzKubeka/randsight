@@ -63,13 +63,13 @@
 .primary {
   background: var(--rs-action);
   box-shadow: 0 1px 2px rgb(17 20 24 / 0.12);
-  color: var(--rs-surface);
+  color: var(--rs-on-action);
 }
 
 .primary:hover {
-  background: var(--rs-blue-strong);
+  background: var(--rs-action-hover);
   box-shadow: 0 8px 20px rgb(31 95 204 / 0.28);
-  color: var(--rs-surface);
+  color: var(--rs-on-action);
 }
 
 .arrow {
@@ -191,9 +191,9 @@
 
 .phone {
   overflow: hidden;
-  border: 6px solid var(--rs-ink);
+  border: 6px solid var(--rs-device);
   border-radius: 1.75rem;
-  background: var(--rs-ink);
+  background: var(--rs-device);
   box-shadow:
     0 4px 10px rgb(17 20 24 / 0.12),
     0 36px 72px -12px rgb(17 20 24 / 0.38);
@@ -397,8 +397,8 @@
   overflow: hidden;
   isolation: isolate;
   padding: calc(var(--rs-space-12) * 1.5) var(--rs-gutter);
-  background: var(--rs-ink);
-  color: var(--rs-surface);
+  background: var(--rs-band);
+  color: var(--rs-on-band);
   text-align: center;
 }
 
@@ -408,18 +408,18 @@
 
 .closing p {
   margin: var(--rs-space-4) 0 var(--rs-space-8);
-  color: var(--rs-rule);
+  color: var(--rs-on-band-muted);
   font-size: var(--rs-text-lg);
 }
 
 .closing .small {
   margin: var(--rs-space-5) 0 0;
-  color: var(--rs-rule-strong);
+  color: var(--rs-on-band-faint);
   font-size: var(--rs-text-sm);
 }
 
 .closing .primary:focus-visible {
-  outline-color: var(--rs-surface);
+  outline-color: var(--rs-on-band);
 }
 
 /* The brand mark, oversized and faint, behind the call to action. */

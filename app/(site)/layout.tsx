@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { ThemeToggle } from '@/components/theme-toggle.tsx'
 import { Wordmark } from '@/components/wordmark.tsx'
 import styles from './site.module.css'
 
@@ -11,6 +12,7 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
           <Wordmark />
         </Link>
         <nav aria-label="Site" className={styles.nav}>
+          <ThemeToggle />
           <Link href="/docs">Docs</Link>
           <Link href="/sign-in" className={styles.signIn}>
             Sign in

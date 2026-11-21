@@ -83,14 +83,14 @@
   border: 0;
   border-radius: var(--rs-radius-sm);
   background: var(--rs-action);
-  color: var(--rs-surface);
+  color: var(--rs-on-action);
   font: inherit;
   font-weight: var(--rs-weight-semibold);
   cursor: pointer;
 }
 
 .button:hover {
-  background: var(--rs-blue-strong);
+  background: var(--rs-action-hover);
 }
 
 .button:disabled {

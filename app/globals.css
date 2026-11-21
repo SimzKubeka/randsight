@@ -1,26 +1,39 @@
+/* Each colour is light-dark(light, dark). With no saved choice the system setting decides (even without
+   JavaScript); the theme toggle pins one by setting data-theme on <html>. Every text pair meets WCAG AA in both. */
 :root {
+  color-scheme: light dark;
+
   /* brand */
-  --rs-vermilion: #cb432b;
-  --rs-vermilion-text: #b83a24;
-  --rs-blue: #1f5fcc;
-  --rs-blue-strong: #184ea8;
-  --rs-blue-50: #eaf1fc;
+  --rs-vermilion: light-dark(#cb432b, #e8664c);
+  --rs-vermilion-text: light-dark(#b83a24, #ff8b72);
+  --rs-blue: light-dark(#1f5fcc, #7aa7ff);
+  --rs-blue-strong: light-dark(#184ea8, #a6c4ff);
+  --rs-blue-50: light-dark(#eaf1fc, #1b2a45);
 
   /* neutrals */
-  --rs-ink: #111418;
-  --rs-ink-2: #4a5260;
-  --rs-ink-3: #5b6472;
-  --rs-rule: #d9dee5;
-  --rs-rule-strong: #c4ccd6;
-  --rs-canvas: #f5f7fa;
-  --rs-surface: #ffffff;
+  --rs-ink: light-dark(#111418, #e8ebf0);
+  --rs-ink-2: light-dark(#4a5260, #aab2be);
+  --rs-ink-3: light-dark(#5b6472, #939cab);
+  --rs-rule: light-dark(#d9dee5, #29303b);
+  --rs-rule-strong: light-dark(#c4ccd6, #3a4351);
+  --rs-canvas: light-dark(#f5f7fa, #0e1116);
+  --rs-surface: light-dark(#ffffff, #161a21);
 
   /* semantic */
   --rs-text: var(--rs-ink);
   --rs-text-muted: var(--rs-ink-2);
   --rs-bg: var(--rs-canvas);
   --rs-link: var(--rs-blue);
-  --rs-action: var(--rs-blue);
+  /* Buttons carry white text, so they stay a deep blue in dark mode where links turn light. */
+  --rs-action: light-dark(#1f5fcc, #2563d6);
+  --rs-action-hover: light-dark(#184ea8, #1d55bd);
+  --rs-on-action: #ffffff;
+  /* Always-dark surfaces: the landing page's closing band and the phone's bezel. */
+  --rs-band: light-dark(#111418, #1d222b);
+  --rs-on-band: #ffffff;
+  --rs-on-band-muted: #d9dee5;
+  --rs-on-band-faint: #c4ccd6;
+  --rs-device: light-dark(#111418, #2b313b);
   --rs-focus: var(--rs-blue);
   --rs-change: var(--rs-vermilion-text);
   --rs-attention: var(--rs-vermilion-text);
@@ -66,6 +79,21 @@
   --rs-tap: 44px;
   --rs-row: 3.5rem;
   --rs-progress: 6px;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+/* Theme switch: the toggle animates the new theme in as a growing circle, so the default cross-fade is off. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
 }
 
 *,
@@ -154,6 +182,26 @@ a:hover {
   clip: rect(0 0 0 0);
   white-space: nowrap;
   border: 0;
+}
+
+/* Off screen until a keyboard user tabs to it, then above the sticky headers. */
+.skip-link {
+  position: fixed;
+  top: var(--rs-space-2);
+  left: var(--rs-space-2);
+  z-index: 100;
+  padding: var(--rs-space-3) var(--rs-space-4);
+  border-radius: var(--rs-radius-sm);
+  background: var(--rs-action);
+  color: var(--rs-on-action);
+  font-weight: var(--rs-weight-semibold);
+  text-decoration: none;
+  transform: translateY(calc(-100% - var(--rs-space-4)));
+}
+
+.skip-link:focus-visible {
+  color: var(--rs-on-action);
+  transform: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
