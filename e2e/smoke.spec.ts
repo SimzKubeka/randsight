@@ -6,3 +6,12 @@ test('landing renders without horizontal scroll', async ({ page }) => {
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth)
   expect(overflow).toBe(false)
 })
+
+test('landing fits narrow browser windows, not only phone emulation', async ({ page }) => {
+  for (const width of [320, 375, 390]) {
+    await page.setViewportSize({ width, height: 740 })
+    await page.goto('/')
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Your money, in hindsight.')
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth), `${width}px`).toBe(0)
+  }
+})
