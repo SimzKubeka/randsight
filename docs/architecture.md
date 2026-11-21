@@ -67,9 +67,9 @@ With several application instances, a local file stops working because each inst
 
 ## Live Track: simulated feed now, bank API later
 
-*Status: in progress. The tables and session handling are in place; the screen and feed are being built.*
+Live Track shows the current month against a grocery target, using a fixed demo date of 20 November 2026. It leads with what is left (R2,200 of R6,000), then a separate line compares spending with an even pace: the target × today’s day ÷ the days in the month (R4,000 by day 20 of 30). The pace line describes how the month is going; it is not a forecast. The pure maths lives in `lib/live-track.ts`.
 
-Live Track shows the current month against a grocery target, using a fixed demo date of 20 November 2026. A simulated feed applies a sample payment for the signed-in session only; applying it twice counts it once (`INSERT OR IGNORE` on session and event id).
+A simulated feed applies one sample payment (R450 at Marula Market) for the signed-in session only. Applying it twice counts it once (`INSERT OR IGNORE` on session and event id), another session for the same customer is untouched, and reset or signing out removes it. The forms are server actions that work without JavaScript; with it, the new figure is announced through a polite live region and focus moves to the next control.
 
 A real feed would come from a consented bank API (an account-information provider). The proposed path: the provider calls a webhook route, the app verifies the signature, maps each item to the `transactions` shape with the provider's id as a unique key, and inserts it with `INSERT OR IGNORE`. That replaces the simulated feed without touching the reporting code. It is not built in this submission.
 
