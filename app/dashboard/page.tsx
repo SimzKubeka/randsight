@@ -6,7 +6,7 @@ import { getMonths, getTotals, getTransactions } from '@/lib/data.ts'
 import { getDb } from '@/lib/db.ts'
 import { describeChange, explainChange, monthTotals, type Driver } from '@/lib/insights.ts'
 import { formatRand } from '@/lib/money.ts'
-import { DEMO_NOW, monthLabel, monthName, monthOf, shiftMonth } from '@/lib/period.ts'
+import { DEMO_NOW, monthName, monthOf, shiftMonth } from '@/lib/period.ts'
 import { CategoryDetail } from './_components/category-detail.tsx'
 import styles from './dashboard.module.css'
 import { DetailDialog } from './_components/detail-dialog.tsx'
@@ -87,16 +87,19 @@ export default async function DashboardPage({ searchParams }: Props) {
           <div>
             <h1 className={styles.title}>Monthly review</h1>
             <p className={styles.subtitle}>What changed from one month to the next, down to the payments that made the difference.</p>
-            <p className={styles.status}>
-              <span className={styles.statusDot} aria-hidden="true" />
-              {monthLabel(month)} · Completed month · {months.length} months of records
-            </p>
           </div>
-          <MonthPicker months={months} month={month} category={category} />
+          <div className={styles.pageAction}>
+            <MonthPicker months={months} month={month} category={category} />
+            <p className={styles.records}>Completed month · {months.length} months of records</p>
+          </div>
         </header>
 
         <div>
-          <p className={styles.lead}>{copy ? `${copy.headline} ${copy.causes}` : 'There is no earlier month to compare with.'}</p>
+          {/* The month's answer, set apart like a notification; the dot pulses gently, and stays still with reduced motion. */}
+          <div className={styles.insight}>
+            <span className={styles.pulse} aria-hidden="true" />
+            <p>{copy ? `${copy.headline} ${copy.causes}` : 'There is no earlier month to compare with.'}</p>
+          </div>
 
           <div className={styles.stats}>
             <div className={styles.statMain}>
