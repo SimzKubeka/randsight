@@ -12,6 +12,7 @@ test('landing fits narrow browser windows, not only phone emulation', async ({ p
     await page.setViewportSize({ width, height: 740 })
     await page.goto('/')
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Your money, in hindsight.')
-    expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth), `${width}px`).toBe(0)
+    // clientWidth leaves out a classic scrollbar, which innerWidth would count.
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth), `${width}px`).toBe(0)
   }
 })
