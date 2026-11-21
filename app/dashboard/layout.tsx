@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { cookies } from 'next/headers'
 import Link from 'next/link'
 import { Icon } from '@/components/icons.tsx'
+import { ThemeToggle } from '@/components/theme-toggle.tsx'
 import { Wordmark } from '@/components/wordmark.tsx'
 import { SESSION_COOKIE } from '@/lib/auth.ts'
 import { activeCustomerId } from '@/lib/sessions.ts'
@@ -64,6 +65,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
           </Link>
           <p className={styles.today}>Demo date · {today}</p>
           <div className={styles.actions}>
+            <ThemeToggle className={styles.iconButton} />
             <Link href="/docs" className={styles.iconButton} title="Docs">
               <Icon name="docs" />
               <span className="sr-only">Docs</span>
@@ -77,7 +79,13 @@ export default async function DashboardLayout({ children }: { children: React.Re
               </span>
             )}
             <div className={styles.mobileOnly}>
-              <MobileMenu>{navigation}</MobileMenu>
+              <MobileMenu>
+                {navigation}
+                <div className={styles.menuTheme}>
+                  <span aria-hidden="true">Dark theme</span>
+                  <ThemeToggle />
+                </div>
+              </MobileMenu>
             </div>
           </div>
         </header>
