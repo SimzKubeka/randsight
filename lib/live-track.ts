@@ -36,20 +36,44 @@ export type Progress = {
   paceDeltaCents: number
   day: number
   days: number
+  /** Days after today left in the month. */
+  daysLeft: number
+  /** What can be spent each remaining day and still finish within the target; 0 once it's used up. */
+  dailyAllowanceCents: number
+  /** Month-end total if spending continues at this month's average daily rate, to the nearest rand. An estimate, never a promise. */
+  forecastCents: number
 }
 
 export function progress(targetCents: number, spentCents: number, nowIso: string): Progress {
   const day = dayOfMonth(nowIso)
   const days = daysInMonth(monthOf(nowIso))
   const paceCents = Math.round((targetCents * day) / days)
+  const remainingCents = targetCents - spentCents
+  const daysLeft = days - day
   return {
     targetCents,
     spentCents,
-    remainingCents: targetCents - spentCents,
+    remainingCents,
     overTarget: spentCents > targetCents,
     paceCents,
     paceDeltaCents: spentCents - paceCents,
     day,
     days,
+    daysLeft,
+    dailyAllowanceCents: remainingCents > 0 && daysLeft > 0 ? Math.floor(remainingCents / daysLeft) : 0,
+    forecastCents: Math.round((spentCents * days) / day / 100) * 100,
   }
+}
+
+type Spending = { postedAt: string; kind: string; amountCents: number }
+
+/** Running total by day of the month (South African time), refunds coming off; one point per day with payments. */
+export function cumulative(payments: Spending[]): { day: number; cents: number }[] {
+  const byDay = new Map<number, number>()
+  for (const p of payments) {
+    const d = dayOfMonth(p.postedAt)
+    byDay.set(d, (byDay.get(d) ?? 0) + (p.kind === 'refund' ? -p.amountCents : p.amountCents))
+  }
+  let total = 0
+  return [...byDay.entries()].sort(([a], [b]) => a - b).map(([day, cents]) => ({ day, cents: (total += cents) }))
 }
