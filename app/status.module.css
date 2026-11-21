@@ -38,12 +38,12 @@
   cursor: pointer;
   border-radius: var(--rs-radius-sm);
   background: var(--rs-action);
-  color: var(--rs-surface);
+  color: var(--rs-on-action);
   font-weight: var(--rs-weight-semibold);
   text-decoration: none;
 }
 
 .actions .primary:hover {
-  background: var(--rs-blue-strong);
-  color: var(--rs-surface);
+  background: var(--rs-action-hover);
+  color: var(--rs-on-action);
 }

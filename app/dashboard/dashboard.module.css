@@ -438,8 +438,8 @@
   position: absolute;
   padding: 0.125rem var(--rs-space-2);
   border-radius: var(--rs-radius-sm);
-  background: var(--rs-blue);
-  color: var(--rs-surface);
+  background: var(--rs-action);
+  color: var(--rs-on-action);
   font-size: var(--rs-text-sm);
   font-weight: var(--rs-weight-semibold);
   white-space: nowrap;
