@@ -53,3 +53,34 @@ test('the theme toggle switches, says which theme is on and remembers it', async
   await toggle.click()
   await expect(html).toHaveAttribute('data-theme', 'light')
 })
+
+test('the page follows a system change until a theme is chosen', async ({ page }) => {
+  await page.goto('/')
+  const html = page.locator('html')
+  await expect(html).toHaveAttribute('data-theme', 'light')
+  await page.emulateMedia({ colorScheme: 'dark' })
+  await expect(html).toHaveAttribute('data-theme', 'dark')
+
+  await page.getByRole('banner').getByRole('button', { name: 'Dark theme' }).click()
+  await expect(html).toHaveAttribute('data-theme', 'light')
+  // Chosen: system changes no longer move it.
+  await page.emulateMedia({ colorScheme: 'light' })
+  await page.emulateMedia({ colorScheme: 'dark' })
+  await expect(html).toHaveAttribute('data-theme', 'light')
+})
+
+test.describe('with storage blocked on a dark system', () => {
+  test.use({ colorScheme: 'dark' })
+
+  test('the theme still starts dark and the first toggle switches to light', async ({ page }) => {
+    await page.addInitScript(() => {
+      Object.defineProperty(window, 'localStorage', { get: () => { throw new DOMException('blocked', 'SecurityError') } })
+    })
+    await page.goto('/')
+    const toggle = page.getByRole('banner').getByRole('button', { name: 'Dark theme' })
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark')
+    await expect(toggle).toHaveAttribute('aria-pressed', 'true')
+    await toggle.click()
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'light')
+  })
+})

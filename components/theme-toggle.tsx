@@ -20,6 +20,8 @@ export function ThemeToggle({ className = '' }: { className?: string }) {
     const next = isDark() ? 'light' : 'dark'
     const apply = () => {
       document.documentElement.dataset.theme = next
+      // A choice made here outranks later system changes, even when storage is blocked.
+      document.documentElement.dataset.themePinned = ''
       try {
         localStorage.setItem(THEME_KEY, next)
       } catch {
