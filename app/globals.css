@@ -6,6 +6,7 @@
   /* brand */
   --rs-vermilion: light-dark(#cb432b, #e8664c);
   --rs-vermilion-text: light-dark(#b83a24, #ff8b72);
+  --rs-vermilion-50: light-dark(#fdece8, #3a1f1a);
   --rs-blue: light-dark(#1f5fcc, #7aa7ff);
   --rs-blue-strong: light-dark(#184ea8, #a6c4ff);
   --rs-blue-50: light-dark(#eaf1fc, #1b2a45);

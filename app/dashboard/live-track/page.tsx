@@ -1,13 +1,15 @@
 import { LiveFigure, SimulationControls } from '@/app/dashboard/_components/live-controls.tsx'
+import { Icon } from '@/components/icons.tsx'
 import { requireSession } from '@/lib/auth.ts'
 import { getLiveTrack } from '@/lib/data.ts'
 import { getDb } from '@/lib/db.ts'
-import { progress, SAMPLE_PAYMENT, TRACKED } from '@/lib/live-track.ts'
+import { cumulative, progress, SAMPLE_PAYMENT, TRACKED } from '@/lib/live-track.ts'
 import { formatRand } from '@/lib/money.ts'
 import { DEMO_NOW, monthName, TIME_ZONE } from '@/lib/period.ts'
 import styles from '../dashboard.module.css'
 import { applySample, resetSample } from './actions.ts'
 import live from './live-track.module.css'
+import { PaceChart } from './pace-chart.tsx'
 
 export const metadata = { title: 'Live Track' }
 
@@ -46,13 +48,22 @@ function Tracker({ track }: { track: NonNullable<ReturnType<typeof getLiveTrack>
       : `${formatRand(Math.abs(p.paceDeltaCents))} ${p.paceDeltaCents < 0 ? 'below' : 'above'} an even pace for ${today}`
   const payments = [
     ...(track.applied
-      ? [{ id: 0, merchant: SAMPLE_PAYMENT.merchant, postedAt: SAMPLE_PAYMENT.postedAt, amountCents: SAMPLE_PAYMENT.amountCents, note: null, isNew: true }]
+      ? [{ id: 0, merchant: SAMPLE_PAYMENT.merchant, postedAt: SAMPLE_PAYMENT.postedAt, amountCents: SAMPLE_PAYMENT.amountCents, kind: 'spend' as const, note: null, isNew: true }]
       : []),
     ...track.payments.map((r) => ({ ...r, isNew: false })),
   ]
+  const points = cumulative(payments)
+  const over = p.forecastCents > p.targetCents
+  const gap = Math.abs(p.forecastCents - p.targetCents)
+  const forecast =
+    gap === 0
+      ? 'right on your target'
+      : `${formatRand(gap)} ${over ? 'over' : 'under'} your target`
+  const chartSummary = `Groceries spent so far in ${month}: ${formatRand(p.spentCents)} by ${today}, against a ${formatRand(p.targetCents)} target. If spending continues at this rate, about ${formatRand(p.forecastCents)} by ${p.days} ${month}.`
 
   return (
     <>
+      <div className={live.overview}>
       <section aria-label="This month so far" className={live.summary}>
         <LiveFigure value={p.remainingCents}>
           <p className={`${styles.figure} amount`}>{formatRand(Math.abs(p.remainingCents))}</p>
@@ -75,6 +86,16 @@ function Tracker({ track }: { track: NonNullable<ReturnType<typeof getLiveTrack>
             {formatRand(p.targetCents)} target × {p.day} ÷ {p.days}. It shows how this month is going, not a forecast.
           </p>
         </details>
+        <p className={live.allowance}>
+          {p.dailyAllowanceCents > 0 ? (
+            <>
+              Up to <strong className="amount">{formatRand(p.dailyAllowanceCents)} a day</strong> for the next {p.daysLeft} days keeps you
+              within your target.
+            </>
+          ) : (
+            `You’ve used this month’s grocery target.`
+          )}
+        </p>
 
         <SimulationControls
           applied={track.applied}
@@ -82,6 +103,55 @@ function Tracker({ track }: { track: NonNullable<ReturnType<typeof getLiveTrack>
           apply={applySample}
           reset={resetSample}
         />
+      </section>
+
+      <section aria-labelledby="forecast-title" className={live.card}>
+        <div className={live.cardHead}>
+          <h2 id="forecast-title">Where {month} is heading</h2>
+          <span className={live.chip} data-over={over || undefined}>
+            {over ? 'Heading over target' : 'On track'}
+          </span>
+        </div>
+        <p className={live.forecast}>
+          If spending continues at this rate, you’d spend about <strong className="amount">{formatRand(p.forecastCents)}</strong> by{' '}
+          {p.days} {month}: {forecast}.
+        </p>
+        <PaceChart p={p} points={points} month={month} summary={chartSummary} />
+        <ul className={live.legend} aria-hidden="true">
+          <li data-key="spent">Spent so far</li>
+          <li data-key="pace">Even pace</li>
+          <li data-key="forecast" data-over={over || undefined}>
+            If this rate continues
+          </li>
+        </ul>
+      </section>
+      </div>
+
+      <section aria-labelledby="feed-title" className={live.feed}>
+        <h2 id="feed-title">Where these payments come from</h2>
+        <p className={styles.muted}>Live Track is built to update as soon as your bank reports a payment, with nothing for you to import.</p>
+        <ol className={live.steps}>
+          <li>
+            <Icon name="bank" />
+            <strong>Your bank</strong>
+            <span>A card payment clears on your account.</span>
+          </li>
+          <li>
+            <Icon name="link" />
+            <strong>Consented bank feed</strong>
+            <span>Your bank shares it through an open-banking API you approve. Read-only, and you can withdraw consent at any time.</span>
+          </li>
+          <li>
+            <Icon name="live" />
+            <strong>RandSight</strong>
+            <span>The payment appears here marked New, and your allowance, pace and forecast update.</span>
+          </li>
+        </ol>
+        <p className={live.simulated}>
+          <span className={live.tag}>Simulated</span>
+          In this demo the Apply button plays your bank’s part, and only your session sees the result. Connecting real banks is the proposed next
+          step.
+        </p>
       </section>
 
       <section aria-labelledby="payments-title" className={live.payments}>
