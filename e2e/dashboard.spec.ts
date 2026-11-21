@@ -82,7 +82,10 @@ test('a long payment list opens at the top of the dialog', async ({ page }) => {
   await page.getByRole('link', { name: 'Grocery spending R900 increase' }).click()
   const heading = page.getByRole('heading', { level: 2, name: 'Grocery spending rose by R900.' })
   await expect(heading).toBeFocused()
-  await page.waitForFunction(() => document.getAnimations().every((a) => a.playState !== 'running'))
+  // Wait for the dialog's opening animation; the insight dot pulses for ever, so endless animations don't count.
+  await page.waitForFunction(() =>
+    document.getAnimations().every((a) => a.playState !== 'running' || a.effect?.getComputedTiming().iterations === Infinity),
+  )
   const scrolled = await heading.evaluate((el) => el.closest('dialog')!.firstElementChild!.scrollTop)
   expect(scrolled).toBe(0)
 })
@@ -127,13 +130,24 @@ test('another month can be chosen and odd parameters fall back safely', async ({
   await expect(page.getByRole('heading', { level: 1, name: 'Monthly review' })).toBeVisible()
 })
 
-test('the spending chart has a table with the same numbers', async ({ page }) => {
+test('the spending chart switches to a table with the same numbers and back', async ({ page }) => {
   await signInAt(page, '/dashboard')
   await expect(page.getByText('Spending rose from R16,600 in September to R18,700 in October.')).toBeVisible()
-  await page.getByText('Show as table').click()
+  const views = page.getByRole('group', { name: 'Show spending as' })
+  const chart = page.getByRole('img', { name: 'Monthly spending' })
+  await expect(views.getByRole('button', { name: 'Chart' })).toHaveAttribute('aria-pressed', 'true')
+  await expect(chart).toBeVisible()
+
+  await views.getByRole('button', { name: 'Table' }).click()
+  await expect(views.getByRole('button', { name: 'Table' })).toHaveAttribute('aria-pressed', 'true')
   const table = page.getByRole('table', { name: 'Monthly spending' })
   await expect(table.getByRole('row', { name: /September.*R16,600/ })).toBeVisible()
   await expect(table.getByRole('row', { name: /October.*R18,700/ })).toBeVisible()
+  await expect(chart).toHaveCount(0)
+
+  await views.getByRole('button', { name: 'Chart' }).click()
+  await expect(chart).toBeVisible()
+  await expect(table).toHaveCount(0)
 })
 
 test('review and detail have no accessibility violations', async ({ page }) => {

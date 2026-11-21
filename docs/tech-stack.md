@@ -29,9 +29,10 @@ The rule throughout: use the platform first, add a dependency only when it earns
 |---|---|
 | An ORM | Prepared SQL in one module (`lib/data.ts`); five small tables. |
 | An auth library | About 60 tested lines on `node:crypto`: one email-and-password login, server-side sessions. |
-| A chart library | One server-rendered component: SVG for lines, HTML for labels so text stays readable on a phone, plus a table with the same numbers. |
+| A chart library | Two server-rendered charts (monthly spending, Live Track): SVG for lines, HTML for labels so text stays readable on a phone. The monthly chart switches to a table with the same numbers. |
 | A CSS framework | CSS Modules and design tokens as CSS custom properties. |
-| An icon library | Seven hand-written SVG paths. |
+| An icon library | 18 hand-written SVG paths on one 24px grid. |
+| An animation library | CSS transitions and scroll-driven animations, the browser's View Transitions for the theme switch, and the Web Animations API for the chart and table switch. All of it is off with reduced motion. |
 | Client-side data fetching or state libraries | The URL holds the state (month, category, page). |
 | `tsx` or a build step for scripts | Node 24 runs the TypeScript seed scripts directly; imports use `.ts` extensions. |
 

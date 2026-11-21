@@ -87,5 +87,6 @@ describe('seedLarge', () => {
     const a = fingerprint()
     expect(a).toMatchObject({ n: 50000 })
     expect(fingerprint()).toEqual(a)
-  })
+    // Two full 50,000-row seeds: far more work than a unit test, so it gets more than the 5 s default.
+  }, 30_000)
 })

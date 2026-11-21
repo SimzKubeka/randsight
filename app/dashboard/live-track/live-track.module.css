@@ -143,3 +143,365 @@
   font-weight: var(--rs-weight-semibold);
   vertical-align: 0.1em;
 }
+
+/* ---------- overview: allowance beside the forecast ---------- */
+
+.overview {
+  display: grid;
+  gap: var(--rs-space-10);
+  align-items: start;
+}
+
+@media (min-width: 64rem) {
+  .overview {
+    grid-template-columns: minmax(0, 30rem) minmax(0, 1fr);
+    gap: var(--rs-space-12);
+  }
+
+  .overview .summary {
+    max-width: none;
+  }
+}
+
+.allowance {
+  margin: var(--rs-space-4) 0 0;
+  color: var(--rs-ink-2);
+}
+
+.allowance strong {
+  color: var(--rs-ink);
+}
+
+/* ---------- forecast card ---------- */
+
+.card {
+  margin-top: var(--rs-space-8);
+  padding: var(--rs-space-6);
+  border: 1px solid var(--rs-rule);
+  border-radius: 0.875rem;
+  background: var(--rs-surface);
+  box-shadow:
+    0 1px 2px rgb(17 20 24 / 0.04),
+    0 14px 32px -18px rgb(17 20 24 / 0.22);
+}
+
+.cardHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--rs-space-2) var(--rs-space-4);
+}
+
+.cardHead h2 {
+  font-size: var(--rs-text-xl);
+}
+
+.chip {
+  padding: var(--rs-space-1) var(--rs-space-3);
+  border-radius: 999px;
+  background: var(--rs-blue-50);
+  color: var(--rs-blue);
+  font-size: var(--rs-text-sm);
+  font-weight: var(--rs-weight-semibold);
+}
+
+.chip[data-over] {
+  background: var(--rs-vermilion-50);
+  color: var(--rs-vermilion-text);
+}
+
+.forecast {
+  margin: var(--rs-space-3) 0 0;
+  color: var(--rs-ink-2);
+}
+
+.forecast strong {
+  color: var(--rs-ink);
+}
+
+/* Chart: same anatomy as the monthly spending chart. */
+.plotArea {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-rows: 11rem auto;
+  margin-top: var(--rs-space-6);
+}
+
+.yAxis {
+  position: relative;
+  width: 4.25rem;
+  color: var(--rs-ink-3);
+  font-size: var(--rs-text-sm);
+}
+
+.yAxis span {
+  position: absolute;
+  right: var(--rs-space-2);
+  transform: translateY(-50%);
+}
+
+.plot {
+  position: relative;
+  border-bottom: 1px solid var(--rs-ink-3);
+  border-left: 1px solid var(--rs-ink-3);
+}
+
+.svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.grid {
+  stroke: var(--rs-rule);
+  stroke-width: 1;
+}
+
+.paceLine {
+  stroke: var(--rs-ink-3);
+  stroke-width: 1.5;
+  stroke-dasharray: 2 5;
+  stroke-linecap: round;
+}
+
+.targetLine {
+  stroke: var(--rs-ink-2);
+  stroke-width: 1;
+}
+
+.today {
+  stroke: var(--rs-rule-strong);
+  stroke-width: 1;
+  stroke-dasharray: 4 4;
+}
+
+.spentLine {
+  fill: none;
+  stroke: var(--rs-blue);
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+}
+
+.forecastLine {
+  stroke: var(--rs-blue);
+  stroke-width: 2;
+  stroke-dasharray: 6 5;
+  stroke-linecap: round;
+}
+
+.forecastLine[data-over] {
+  stroke: var(--rs-vermilion);
+}
+
+/* Left end of the target line: the forecast dot can reach the right end. */
+.targetLabel {
+  position: absolute;
+  left: var(--rs-space-2);
+  padding-bottom: 2px;
+  color: var(--rs-ink-2);
+  font-size: var(--rs-text-sm);
+  font-weight: var(--rs-weight-semibold);
+  transform: translateY(-100%);
+}
+
+.dot,
+.endDot {
+  position: absolute;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.dot {
+  background: var(--rs-blue);
+  box-shadow: 0 0 0 3px var(--rs-surface);
+}
+
+.endDot {
+  left: 100%;
+  border: 2px solid var(--rs-blue);
+  background: var(--rs-surface);
+}
+
+.endDot[data-over] {
+  border-color: var(--rs-vermilion);
+}
+
+.xAxis {
+  position: relative;
+  grid-column: 2;
+  height: 2rem;
+  color: var(--rs-ink-3);
+  font-size: var(--rs-text-sm);
+}
+
+.xAxis span {
+  position: absolute;
+  top: var(--rs-space-2);
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.xAxis span:first-child {
+  transform: none;
+}
+
+.xAxis span:last-child {
+  transform: translateX(-100%);
+}
+
+/* A changed forecast draws itself from today towards month end. */
+@media (prefers-reduced-motion: no-preference) {
+  .forecastLine {
+    animation: draw 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .endDot {
+    animation: pop 400ms 450ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+}
+
+@keyframes draw {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.4);
+  }
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--rs-space-2) var(--rs-space-5);
+  margin: var(--rs-space-2) 0 0;
+  padding: 0;
+  color: var(--rs-ink-2);
+  font-size: var(--rs-text-sm);
+  list-style: none;
+}
+
+.legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--rs-space-2);
+}
+
+.legend li::before {
+  content: '';
+  width: 1.25rem;
+  border-top: 2.5px solid var(--rs-blue);
+}
+
+.legend [data-key='pace']::before {
+  border-top: 2px dotted var(--rs-ink-3);
+}
+
+.legend [data-key='forecast']::before {
+  border-top: 2px dashed var(--rs-blue);
+}
+
+.legend [data-key='forecast'][data-over]::before {
+  border-top-color: var(--rs-vermilion);
+}
+
+/* ---------- where payments come from ---------- */
+
+.feed {
+  margin-top: var(--rs-space-12);
+}
+
+.feed h2 {
+  font-size: var(--rs-text-xl);
+}
+
+.feed > p {
+  max-width: 62ch;
+  margin: var(--rs-space-2) 0 0;
+}
+
+.steps {
+  display: grid;
+  gap: var(--rs-space-4);
+  margin: var(--rs-space-6) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.steps li {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: var(--rs-space-3);
+  align-content: start;
+  padding: var(--rs-space-4);
+  border: 1px solid var(--rs-rule);
+  border-radius: 0.75rem;
+  background: var(--rs-surface);
+}
+
+.steps svg {
+  grid-row: span 2;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0.5rem;
+  border-radius: 0.625rem;
+  background: var(--rs-blue-50);
+  color: var(--rs-blue);
+}
+
+.steps strong {
+  align-self: center;
+}
+
+.steps span {
+  color: var(--rs-ink-2);
+  font-size: var(--rs-text-sm);
+}
+
+/* Desktop: three steps in a row, joined by arrows. */
+@media (min-width: 48rem) {
+  .steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--rs-space-6);
+  }
+
+  .steps li:not(:last-child)::after {
+    content: '→';
+    position: absolute;
+    top: 50%;
+    right: calc(-1 * var(--rs-space-6));
+    width: var(--rs-space-6);
+    color: var(--rs-ink-3);
+    text-align: center;
+    transform: translateY(-50%);
+  }
+}
+
+.simulated {
+  max-width: 70ch;
+  margin: var(--rs-space-4) 0 0;
+  color: var(--rs-ink-2);
+  font-size: var(--rs-text-sm);
+}
+
+.tag {
+  margin-right: var(--rs-space-2);
+  padding: 0.0625rem var(--rs-space-2);
+  border: 1px solid var(--rs-rule-strong);
+  border-radius: 999px;
+  color: var(--rs-ink);
+  font-weight: var(--rs-weight-semibold);
+}

@@ -139,6 +139,102 @@
   font-size: var(--rs-text-lg);
 }
 
+/* Month picker with its record count underneath: left-aligned on phones, right-aligned beside the title on wider screens. */
+.pageAction {
+  display: grid;
+  justify-items: start;
+  gap: var(--rs-space-2);
+}
+
+.records {
+  margin: 0;
+  color: var(--rs-ink-2);
+  font-size: var(--rs-text-sm);
+  font-weight: var(--rs-weight-semibold);
+}
+
+/* The title column gives way (its subtitle wraps) so the picker keeps its place beside it on wide screens. */
+.pageHead > :first-child {
+  flex: 1 1 26rem;
+  min-width: 0;
+}
+
+@media (min-width: 64rem) {
+  .pageAction {
+    justify-items: end;
+  }
+}
+
+/* The month's answer as a notification bar. */
+.insight {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--rs-space-4);
+  max-width: 46rem;
+  margin: var(--rs-space-8) 0;
+  padding: var(--rs-space-4) var(--rs-space-5);
+  border: 1px solid var(--rs-rule);
+  border-radius: 0.875rem;
+  background: var(--rs-surface);
+  box-shadow:
+    0 1px 2px rgb(17 20 24 / 0.04),
+    0 14px 32px -18px rgb(17 20 24 / 0.22);
+  font-size: var(--rs-text-lg);
+}
+
+.insight p {
+  margin: 0;
+}
+
+.pulse {
+  position: relative;
+  flex: none;
+  width: 0.625rem;
+  height: 0.625rem;
+  /* Centred on the first line of text. */
+  margin-top: calc((1lh - 0.625rem) / 2);
+  border-radius: 50%;
+  background: var(--rs-blue);
+  box-shadow: 0 0 0 4px var(--rs-blue-50);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .insight {
+    animation: insight-in 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .pulse {
+    box-shadow: none;
+  }
+
+  .pulse::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: var(--rs-blue);
+    animation: pulse 2.2s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+}
+
+@keyframes insight-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.99);
+  }
+}
+
+@keyframes pulse {
+  from {
+    opacity: 0.55;
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(3.2);
+  }
+}
+
 .stats {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -464,16 +560,89 @@
   transform: translateX(-50%);
 }
 
-.tableToggle {
+/* Chart | Table: a pill slides under the chosen option. */
+.switch {
+  position: relative;
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr;
   margin-top: var(--rs-space-4);
+  padding: 3px;
+  border-radius: 999px;
+  background: var(--rs-canvas);
+  box-shadow: inset 0 0 0 1px var(--rs-rule);
 }
 
-.tableToggle summary {
+.switch::before {
+  content: '';
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  left: 3px;
+  width: calc(50% - 3px);
+  border-radius: 999px;
+  background: var(--rs-surface);
+  box-shadow:
+    0 1px 2px rgb(17 20 24 / 0.08),
+    0 0 0 1px var(--rs-rule);
+}
+
+.switch[data-view='table']::before {
+  transform: translateX(100%);
+}
+
+.switch button {
+  position: relative;
   display: inline-flex;
   align-items: center;
-  min-height: var(--rs-tap);
-  color: var(--rs-blue);
+  justify-content: center;
+  gap: var(--rs-space-2);
+  min-height: 2.5rem;
+  padding-inline: var(--rs-space-4);
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: var(--rs-ink-2);
+  font: inherit;
+  font-weight: var(--rs-weight-semibold);
   cursor: pointer;
+  transition: color 200ms ease-out;
+}
+
+.switch button svg {
+  width: 18px;
+  height: 18px;
+}
+
+.switch button[aria-pressed='true'] {
+  color: var(--rs-ink);
+}
+
+.switch button:not([aria-pressed='true']):hover {
+  color: var(--rs-ink);
+}
+
+.switch button:focus-visible {
+  outline-offset: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .switch::before {
+    transition: transform 380ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+}
+
+/* Holds whichever view is chosen; a new formatting context keeps the chart's top margin (room for its callout) inside. */
+.viewFrame {
+  display: flow-root;
+}
+
+.viewFrame .table {
+  margin-top: var(--rs-space-6);
+}
+
+.table tr[data-selected] th,
+.table tr[data-selected] td {
+  font-weight: var(--rs-weight-semibold);
 }
 
 .table {

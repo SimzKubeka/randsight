@@ -14,6 +14,10 @@ const PATHS = {
   chevronRight: 'M9 18l6-6-6-6',
   menu: 'M4 7h16M4 12h16M4 17h16',
   close: 'M6 6l12 12M18 6L6 18',
+  chart: 'M3 3v18h18M7 15l4-4 3 3 5-6',
+  table: 'M3 5h18v14H3zM3 10h18M3 15h18M9 5v14',
+  bank: 'M3 21h18M5 21v-9M10 21v-9M14 21v-9M19 21v-9M2 10l10-6 10 6z',
+  link: 'M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1',
 } as const
 
 export type IconName = keyof typeof PATHS
