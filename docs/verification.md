@@ -37,11 +37,14 @@ GitHub Actions runs three jobs on every pull request and every push to `main`:
 - Month boundaries in South African time: 23:30 on 31 October is October; 00:30 on 1 November is November; the year boundary.
 - Empty months, a missing previous month, and categories with nothing the month before.
 - Paging the 50,000-transaction customer: every row appears exactly once, in a stable order, and the rows add up to the category total.
+- Live Track: R3,800 spent and R2,200 left, R200 below an even pace of R4,000; after the sample payment R4,250 and R1,750, R250 above. Pace rounds to whole cents and the day follows South African time.
+- Live Track's sample payment counts once however often it is applied, never reaches another session, and reset or sign-out removes it.
 
 ### Customer experience and accessibility
 
 - Landing → sign-in → October explanation → Medical payments → back to the same row → sign-out.
 - A bookmarked Medical view survives sign-in, refresh and the browser's Back button.
+- Live Track: applying the sample payment updates the figure, announces it, marks the payment New and moves focus to Reset; a reload keeps it; reset restores November and returns focus.
 - Opening a category moves focus to its heading. "All of October" and Back return focus to the row that was opened.
 - Keyboard-only sign-in and drill-down.
 - No horizontal scrolling at phone width.
@@ -65,8 +68,8 @@ Run on 20 November 2026 (Windows 11, Node 24.18).
 |---|---|
 | Type check | Pass |
 | Lint | Pass, 0 problems |
-| Unit tests | 73 passed |
-| Browser tests | 52 passed |
+| Unit tests | 84 passed |
+| Browser tests | 66 passed |
 | Docker image, built from a clean clone | Built in 58 s, 392 MB |
 | Dashboard browser tests against the container | 14 passed |
 

@@ -1,7 +1,9 @@
 import type { DatabaseSync } from 'node:sqlite'
-import type { Kind, TotalRow } from './insights.ts'
+import { monthTotals, type Kind, type TotalRow } from './insights.ts'
+import { SAMPLE_PAYMENT, TRACKED } from './live-track.ts'
 
 // Every query is scoped by customer_id, which must come from the signed-in session.
+// Live Track's simulation is scoped by session_id as well, so two reviewers never see each other's payment.
 
 export function getCustomerName(db: DatabaseSync, customerId: number): string {
   return (db.prepare('SELECT name FROM customers WHERE id = ?').get(customerId) as { name: string }).name
@@ -56,4 +58,32 @@ export function getTransactions(db: DatabaseSync, customerId: number, month: str
     )
     .all(customerId, month, category, PAGE_SIZE, (current - 1) * PAGE_SIZE) as Transaction[]
   return { rows, count, page: current }
+}
+
+/** Everything Live Track shows for this customer and session, or null when the customer has no target to track. */
+export function getLiveTrack(db: DatabaseSync, customerId: number, sessionId: string) {
+  const { month, category } = TRACKED
+  const target = db
+    .prepare('SELECT amount_cents AS cents FROM targets WHERE customer_id = ? AND month = ? AND category = ?')
+    .get(customerId, month, category) as { cents: number } | undefined
+  if (!target) return null
+  // Same netting as the monthly review: refunds come off, transfers never count.
+  const baseCents = monthTotals(month, getTotals(db, customerId, month, month)).byCategory[category] ?? 0
+  const applied = !!db.prepare('SELECT 1 FROM sim_events WHERE session_id = ? AND event_id = ?').get(sessionId, SAMPLE_PAYMENT.id)
+  return {
+    targetCents: target.cents,
+    spentCents: baseCents + (applied ? SAMPLE_PAYMENT.amountCents : 0),
+    applied,
+    payments: getTransactions(db, customerId, month, category, 1).rows,
+  }
+}
+
+/** Records the sample payment for this session. The primary key makes a second apply a no-op. */
+export function applySamplePayment(db: DatabaseSync, sessionId: string, now = Date.now()) {
+  db.prepare('INSERT OR IGNORE INTO sim_events (session_id, event_id, applied_at) VALUES (?, ?, ?)').run(sessionId, SAMPLE_PAYMENT.id, now)
+}
+
+/** Undoes this session's simulation; other sessions are untouched. */
+export function resetSimulation(db: DatabaseSync, sessionId: string) {
+  db.prepare('DELETE FROM sim_events WHERE session_id = ?').run(sessionId)
 }
