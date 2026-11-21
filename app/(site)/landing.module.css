@@ -359,6 +359,8 @@
   display: grid;
   gap: var(--rs-space-10);
   align-items: center;
+  /* The phone settles in from a 5° tilt; on narrow screens the tilted box would widen the page. */
+  overflow-x: clip;
 }
 
 .splitPhone {

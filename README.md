@@ -4,6 +4,12 @@ A monthly money review for a fictional bank customer: what changed from one mont
 
 The engineering docs live in [`docs/`](docs/architecture.md) and are also served at `/docs`.
 
+## Live preview
+
+A preview runs at [randsight.vercel.app](https://randsight.vercel.app). **Docker (below) is the supported way to review RandSight.**
+
+The preview may occasionally ask you to sign in again, and an applied Live Track payment may disappear. RandSight keeps its data in one SQLite file. Vercel runs the app on several short-lived server instances, each with its own temporary copy of that file, so a session created on one instance is unknown to the next. Docker and `npm start` run a single server with one database and don't have this problem. Fixing it on Vercel means a shared database, as described in [Why SQLite, and what changes with more servers](docs/architecture.md#why-sqlite-and-what-changes-with-more-servers).
+
 ## Run with Docker
 
 ```sh
