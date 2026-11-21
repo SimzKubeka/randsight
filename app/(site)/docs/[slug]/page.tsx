@@ -22,7 +22,7 @@ export default async function DocPage({ params }: Props) {
   if (!html) notFound()
 
   return (
-    <main className={styles.layout}>
+    <main id="main" className={styles.layout}>
       <DocsNav current={slug} />
       <article className={styles.article} dangerouslySetInnerHTML={{ __html: html }} />
     </main>

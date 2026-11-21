@@ -184,6 +184,26 @@ a:hover {
   border: 0;
 }
 
+/* Off screen until a keyboard user tabs to it, then above the sticky headers. */
+.skip-link {
+  position: fixed;
+  top: var(--rs-space-2);
+  left: var(--rs-space-2);
+  z-index: 100;
+  padding: var(--rs-space-3) var(--rs-space-4);
+  border-radius: var(--rs-radius-sm);
+  background: var(--rs-action);
+  color: var(--rs-on-action);
+  font-weight: var(--rs-weight-semibold);
+  text-decoration: none;
+  transform: translateY(calc(-100% - var(--rs-space-4)));
+}
+
+.skip-link:focus-visible {
+  color: var(--rs-on-action);
+  transform: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

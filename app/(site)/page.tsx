@@ -33,7 +33,7 @@ const DETAILS = [
 
 export default function Home() {
   return (
-    <main className={styles.page}>
+    <main id="main" className={styles.page}>
       <section className={styles.hero}>
         <div className={styles.heroText}>
           <h1 className={styles.title}>

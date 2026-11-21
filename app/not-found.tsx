@@ -6,7 +6,7 @@ export const metadata = { title: 'Page not found' }
 
 export default function NotFound() {
   return (
-    <main className={`container ${styles.page}`}>
+    <main id="main" className={`container ${styles.page}`}>
       <Link href="/" className={styles.home}>
         <Wordmark />
       </Link>

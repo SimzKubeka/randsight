@@ -25,7 +25,7 @@ export default async function SignInPage({ searchParams }: Props) {
   if (token && getSession(getDb(), token)?.status === 'valid') redirect(next)
 
   return (
-    <main className={`container ${styles.page}`}>
+    <main id="main" className={`container ${styles.page}`}>
       <Link href="/" className={styles.home}>
         <Wordmark />
       </Link>

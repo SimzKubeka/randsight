@@ -47,7 +47,7 @@ export default async function DashboardPage({ searchParams }: Props) {
   const months = getMonths(db, customerId, monthOf(DEMO_NOW))
   if (!months[0]) {
     return (
-      <main className={styles.page}>
+      <main id="main" className={styles.page}>
         <div>
           <h1 className={styles.title}>Monthly review</h1>
           <p>No payments recorded yet.</p>
@@ -80,7 +80,7 @@ export default async function DashboardPage({ searchParams }: Props) {
   const detail = category && getTransactions(db, customerId, month, category, Number(params.page) || 1)
 
   return (
-    <main className={styles.page}>
+    <main id="main" className={styles.page}>
       <FocusReturn key={`${month}|${category}|${detail ? detail.page : 0}`} />
       <div className={styles.review}>
         <header className={styles.pageHead}>

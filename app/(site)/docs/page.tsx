@@ -12,7 +12,7 @@ export const metadata = publicMetadata(
 
 export default function DocsIndex() {
   return (
-    <main className={styles.layout}>
+    <main id="main" className={styles.layout}>
       <DocsNav />
       <div className={styles.article}>
         <h1>Engineering docs</h1>

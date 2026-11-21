@@ -45,3 +45,18 @@ test('choosing a page from the navigation goes there and closes the menu', async
   if (!isDesktop(page)) await expect(page.getByRole('navigation', { name: 'Main' })).toBeHidden()
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
 })
+
+test('the first Tab offers a skip link straight to the page content', async ({ page }) => {
+  await signIn(page)
+  await page.reload()
+  await page.keyboard.press('Tab')
+  const skip = page.getByRole('link', { name: 'Skip to main content' })
+  await expect(skip).toBeFocused()
+  await expect(skip).toBeInViewport()
+
+  await page.keyboard.press('Enter')
+  await expect(page).toHaveURL(/#main$/)
+  // The next stop is inside the review, not the sidebar or top bar.
+  await page.keyboard.press('Tab')
+  expect(await page.evaluate(() => !!document.activeElement?.closest('main'))).toBe(true)
+})
