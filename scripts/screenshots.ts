@@ -26,8 +26,10 @@ async function signIn(page: Page) {
 }
 
 async function shoot(page: Page, name: string, quality: number) {
-  // Let load animations finish, then confirm the stylesheet applied (the review sits on the grey canvas).
-  await page.waitForFunction(() => document.getAnimations().every((a) => a.playState !== 'running'))
+  // Let load animations finish (the insight dot pulses forever, so skip endless ones), then confirm the stylesheet applied.
+  await page.waitForFunction(() =>
+    document.getAnimations().every((a) => a.playState !== 'running' || a.effect?.getTiming().iterations === Infinity),
+  )
   const styled = await page.evaluate(() => getComputedStyle(document.body).backgroundColor !== 'rgba(0, 0, 0, 0)')
   if (!styled || failed.length) throw new Error(`${name}: not saved. ${failed.join(', ') || 'Page is unstyled'}. Rebuild and restart the server.`)
   await page.screenshot({ path: `${out}/${name}`, type: 'jpeg', quality })
