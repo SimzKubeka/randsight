@@ -661,6 +661,7 @@
   font-weight: var(--rs-weight-regular);
 }
 
+.table th[scope='col']:last-child,
 .table td {
   text-align: right;
 }

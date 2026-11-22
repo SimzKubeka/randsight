@@ -17,7 +17,11 @@ async function newSession(browser: Browser) {
   return page
 }
 
-const noViolations = async (page: Page) => expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([])
+async function noViolations(page: Page) {
+  // Next streams metadata on dynamic pages, so wait for the title before auditing.
+  await expect(page).toHaveTitle(/RandSight/)
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([])
+}
 
 test('applying the sample payment updates November, once, for this session only', async ({ page, browser }) => {
   await signInTo(page)
