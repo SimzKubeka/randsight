@@ -94,7 +94,7 @@
 .apply,
 .reset {
   min-height: var(--rs-tap);
-  padding-inline: var(--rs-space-5);
+  padding: var(--rs-space-2) var(--rs-space-5);
   border-radius: var(--rs-radius-sm);
   font: inherit;
   font-weight: var(--rs-weight-semibold);
