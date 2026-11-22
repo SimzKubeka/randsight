@@ -21,6 +21,7 @@
   line-height: 1.1;
   letter-spacing: -0.02em;
   text-wrap: balance;
+  overflow-wrap: anywhere; /* enlarged text: break a word rather than clip it */
 }
 
 .body {
@@ -123,6 +124,7 @@
   font-weight: var(--rs-weight-semibold);
   line-height: 1;
   letter-spacing: -0.03em;
+  overflow-wrap: anywhere; /* enlarged text: break a word rather than clip it */
 }
 
 /* Each line is a mask; the words rise through it on load. */
